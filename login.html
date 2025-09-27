@@ -126,43 +126,6 @@
   </div>
 </body>
 <script>
-  let bt1= document.getElementById("submit")
-  let msgT= document.getElementById("msgT")
-  let msg= document.getElementById("msg")
-  let phoneC= document.getElementById("phoneI");
-  let passC= document.getElementById("passI")
-
-function f1(){
-  let phoneI= document.getElementById("phoneI").value;
-  let passI= document.getElementById("passI").value;
-
-  fetch("http://localhost:3000/path4",{
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`})
-  })
-  .then(type=> type.json())
-  .then(data=>{
-    if(data.name=="Null"){
-      phoneC.style.color="red";
-      phoneC.type="text";
-      phoneC.value+=" Is Not Found";
-
-      setTimeout(()=>{
-        phoneC.style.color="blue";
-        phoneC.type="number";
-      }, 5000);
-    } else
-    {
-      msg.style.display="block";
-      msgT.innerHTML=`Welcome Back ${data.name}!`;
-      setTimeout(()=>{
-        msg.style.display="none";
-        window.location.href="http://localhost:3000/pages/contents/profile.html"
-      }, 8000);
-    }
-  });
-  console.log(x.split(" "))
-}
+  
 </script>
 </html>

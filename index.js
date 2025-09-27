@@ -1,56 +1,14 @@
-const express= require("express");
-const cors= require("cors");
-const mongoose= require("mongoose")
-const multer= require("multer")
-const app= express();
-app.use(cors())
-app.use(express.json())
-app.use("/pictures", express.static("pictures"))
-app.use("/pages", express.static("pages"))
+// index.js
+const express = require("express");
+const app = express();
 
-mongoose.connect("mongodb://localhost:27017/Users", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(()=> console.log("Database Connected Successfully"))
-.catch(err=> console.log("Database Failed: "+ err))
+// Use Render's assigned port (important for deployment)
+const PORT = process.env.PORT || 3000;
 
-let labels= new mongoose.Schema({name: String, phone: String, password: String})
-let contacts= mongoose.model("User Contacts", labels)
+app.get("/", (req, res) => {
+  res.send("Hello World, I'm Amani 🚀");
+});
 
-let storage1= multer.diskStorage({
-  destination: function(req, file, cb){
-    cb(null, "pictures/")
-  },
-  filename: function(req, file, cb){
-    cb(null, "a.jpg")
-  }
-})
-app.post("/path1", (req, res)=>{
-  console.log(req.body);
-  let user= new contacts({name: req.body.name, phone: req.body.phone, password: req.body.pass})
-  user.save()
-  console.log(req.body.name + " Received and Saved");
-  res.send("Received and Saved ✅")
-})
-
-filex= multer({storage: storage1})
-app.post("/path2", filex.single("image"), (req, res)=>{
-console.log("File Received")
-})
-
-app.post("/path3", async (req, res)=>{
-  var arr= await contacts.find({name: `${req.body.name}`});
-  res.json({arr: arr})
-  console.log(arr)
-  })
-
-  app.post("/path4", async (req, res)=>{
-    let arr= await contacts.find({phone: req.body.phone, password: req.body.pass});
-    let arr1;
-    if(arr.length==0){arr1=[{name: "Null"}]} else{arr1=arr}
-    res.json({name: arr1[0].name})
-    console.log(arr1)
-  })
-
-app.listen(3000, ()=>console.log("Backend Started"))
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
