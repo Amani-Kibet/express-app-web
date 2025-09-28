@@ -8,7 +8,7 @@ app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 
-mongoose.connect("mongodb+srv://amani:<db_password>@cluster0.uppbksy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 .then(()=> console.log("Database Connected Successfully"))
 .catch(err=> console.log("Database Failed: "+ err))
 
