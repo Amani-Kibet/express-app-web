@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Send Data</title>
+  </head>
+  <body>
+    <input id="name" placeholder="Enter name" />
+    <button onclick="sendData()">Send</button>
+
+    <script>
+      async function sendData() {
+        const name = document.getElementById("name").value;
+
+        try {
+          const res = await fetch("http://localhost:3000/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name }),
+          });
+
+          const data = await res.json();
+          console.log("Response from backend:", data);
+        } catch (error) {
+          console.error("Error sending data:", error);
+        }
+      }
+    </script>
+  </body>
+</html>

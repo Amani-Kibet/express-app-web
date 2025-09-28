@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <title>Profile Page</title>
+    <style>
+        body{
+            background-color: cyan;
+        }
+        #container{
+            background-color: rgb(97, 203, 235);
+            height: 24rem;
+        }
+        #image{
+            background: url(http://localhost:3000/pictures/profilePic.jpg);
+            background-size: cover;
+            width: 10rem;
+            height: 10rem;
+        }
+        .labels{
+            color: red;
+            font-size: 18px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Profile Information</h2>
+        <div id="image"></div>
+        <p id="nameT" class="labels">User Name: </p>
+        <p id="phoneT" class="labels">Phone Number: </p>
+        <p id="passT" class="labels">Password: </p>
+    </div>
+</body>
+<script>
+let nameT= document.getElementById("nameT");
+let phoneT= document.getElementById("phoneT");
+let passT= document.getElementById("passT");
+
+fetch("http://localhost:3000/path3")
+</script>
+</html>

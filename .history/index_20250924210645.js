@@ -1,0 +1,16 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'))
+
+app.get("http://localhost:3000/send", (req, res)=>{
+  res.
+})
+
+app.lesten(3000, ()=>{
+  alert("started")
+})

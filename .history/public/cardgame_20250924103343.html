@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Card Match — Amani's Game</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#ffffff;
+      --accent:#ff6b6b;
+      --glass: rgba(255,255,255,0.06);
+      --text:#e6eef8;
+      --muted:#9fb0c8;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071022 0%, #0f1724 70%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:18px;
+      box-shadow: 0 8px 30px rgba(3,7,18,0.6);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    header{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .title{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ffb86b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#102;box-shadow:0 6px 18px rgba(255,107,107,0.18);
+    }
+    h1{font-size:18px;margin:0}
+    p.sub{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .stat{
+      background:var(--glass);
+      padding:8px 12px;
+      border-radius:10px;
+      font-size:14px;
+      color:var(--muted);
+      min-width:84px;
+      text-align:center;
+    }
+    .btn{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      transition:transform .12s ease, background .12s;
+    }
+    .btn:hover{transform:translateY(-3px)}
+    .btn.accent{
+      background:linear-gradient(90deg,var(--accent),#ffb86b);
+      border:none;color:#071022;
+      box-shadow:0 8px 20px rgba(255,107,107,0.12);
+    }
+
+    /* board */
+    .board{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap:12px;
+      padding:10px;
+    }
+    @media(max-width:880px){
+      .board{grid-template-columns:repeat(4,1fr)}
+    }
+    @media(max-width:520px){
+      .board{grid-template-columns:repeat(3,1fr)}
+    }
+
+    .card{
+      perspective:1000px;
+      cursor:pointer;
+      width:100%;
+      aspect-ratio: 3/4;
+      position:relative;
+    }
+    .card-inner{
+      position:absolute;
+      inset:0;
+      transition: transform .5s cubic-bezier(.2,.9,.3,1);
+      transform-style:preserve-3d;
+      border-radius:10px;
+      box-shadow:0 6px 14px rgba(2,6,23,0.6);
+    }
+    .card.flipped .card-inner{
+      transform:rotateY(180deg);
+    }
+
+    .card-face{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backface-visibility:hidden;
+      border-radius:10px;
+      overflow:hidden;
+      font-size:30px;
+      user-select:none;
+    }
+    .front{
+      background:linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+      border:1px solid rgba(255,255,255,0.03);
+      color:var(--text);
+      transform:rotateY(180deg);
+    }
+    .back{
+      background:linear-gradient(180deg,#0b1b2a,#0f2433);
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--muted);
+      font-size:28px;
+    }
+
+    .matched .card-inner{
+      box-shadow:0 0 0 4px rgba(255,107,107,0.08) inset;
+    }
+
+    .badge{
+      display:inline-block;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(2,6,23,0.6);
+      z-index:50;
+    }
+    .modal-box{
+      background:linear-gradient(180deg,#071022,#071829);
+      padding:22px;
+      border-radius:12px;
+      text-align:center;
+      color:var(--text);
+      width:90%;
+      max-width:460px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .big{font-size:22px;margin:12px 0 6px}
+    .small{color:var(--muted);margin:0 0 16px}
+    .row{display:flex;gap:10px;justify-content:center;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <div class="logo">AM</div>
+        <div>
+          <h1>Card Match — Amani</h1>
+          <p class="sub">Flip cards, match pairs. Built with Express + Vanilla JS.</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="stat">Time: <span id="time">00:00</span></div>
+        <div class="stat">Moves: <span id="moves">0</span></div>
+        <div class="stat">Score: <span id="score">0</span></div>
+        <button id="shuffleBtn" class="btn">Shuffle</button>
+        <button id="restartBtn" class="btn accent">Restart</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="board" id="board" aria-label="Game board"></section>
+    </main>
+  </div>
+
+  <!-- Win modal (hidden by default) -->
+  <div id="winModal" class="modal" style="display:none" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="big">You crushed it! 🎉</div>
+      <div class="small">Time: <span id="finalTime"></span> • Moves: <span id="finalMoves"></span> • Score: <span id="finalScore"></span></div>
+      <div class="row">
+        <button id="playAgain" class="btn accent">Play Again</button>
+        <button id="closeModal" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ----- CONFIG -----
+    const PAIRS = 6; // number of pairs (total cards = PAIRS * 2)
+    const ICONS = ['🍉','🍕','🚀','🐱','🎮','🌟','⚽','🎲','🐼','🥑','🧩','🎧']; // pool
+    const boardEl = document.getElementById('board');
+    const movesEl = document.getElementById('moves');
+    const timeEl = document.getElementById('time');
+    const scoreEl = document.getElementById('score');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const winModal = document.getElementById('winModal');
+    const finalTime = document.getElementById('finalTime');
+    const finalMoves = document.getElementById('finalMoves');
+    const finalScore = document.getElementById('finalScore');
+    const playAgain = document.getElementById('playAgain');
+    const closeModal = document.getElementById('closeModal');
+
+    // ----- STATE -----
+    let deck = [];
+    let firstCard = null;
+    let secondCard = null;
+    let lock = false;
+    let moves = 0;
+    let matches = 0;
+    let score = 0;
+    let timer = null;
+    let seconds = 0;
+    let started = false;
+
+    // ----- HELPERS -----
+    function formatTime(s){
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      return `${mm}:${ss}`;
+    }
+
+    function pickIcons(){
+      // pick PAIRS random icons from ICONS
+      const pool = [...ICONS];
+      const picked = [];
+      while(picked.length < PAIRS){
+        const i = Math.floor(Math.random()*pool.length);
+        picked.push(pool.splice(i,1)[0]);
+      }
+      return picked;
+    }
+
+    function buildDeck(){
+      const picked = pickIcons();
+      const doubled = picked.concat(picked); // pairs
+      // shuffle
+      for(let i=doubled.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [doubled[i],doubled[j]] = [doubled[j],doubled[i]];
+      }
+      deck = doubled.map((icon, idx) => ({
+        id: idx,
+        icon,
+        matched:false
+      }));
+    }
+
+    function renderBoard(){
+      boardEl.innerHTML = '';
+      deck.forEach(card => {
+        const c = document.createElement('div');
+        c.classList.add('card');
+        if(card.matched) c.classList.add('matched');
+        c.dataset.id = card.id;
+
+        c.innerHTML = `
+          <div class="card-inner">
+            <div class="card-face back">?</div>
+            <div class="card-face front">${card.icon}</div>
+          </div>
+        `;
+        c.addEventListener('click', () => onCardClick(card, c));
+        boardEl.appendChild(c);
+      });
+    }
+
+    function startTimer(){
+      if(timer) return;
+      timer = setInterval(() => {
+        seconds++;
+        timeEl.textContent = formatTime(seconds);
+      }, 1000);
+    }
+    function stopTimer(){
+      clearInterval(timer); timer = null;
+    }
+    function resetTimer(){
+      stopTimer(); seconds = 0; timeEl.textContent = formatTime(seconds);
+    }
+
+    function onCardClick(card, el){
+      if(lock) return;
+      if(card.matched) return;
+      // prevent clicking same card twice
+      if(firstCard && firstCard.id === card.id) return;
+
+      // start timer on first action
+      if(!started){ started = true; startTimer(); }
+
+      // flip UI
+      el.classList.add('flipped');
+
+      if(!firstCard){
+        firstCard = {card, el};
+        return;
+      }
+      secondCard = {card, el};
+      lock = true;
+      moves++;
+      movesEl.textContent = moves;
+      checkMatch();
+    }
+
+    function checkMatch(){
+      const a = firstCard.card;
+      const b = secondCard.card;
+      if(a.icon === b.icon){
+        // match!
+        a.matched = true; b.matched = true;
+        firstCard.el.classList.add('matched');
+        secondCard.el.classList.add('matched');
+        matches++;
+        score += 100;
+        scoreEl.textContent = score;
+        resetSelection();
+        lock = false;
+        if(matches === PAIRS) onWin();
+      } else {
+        // not match -> flip back
+        score = Math.max(0, score - 10);
+        scoreEl.textContent = score;
+        setTimeout(() => {
+          firstCard.el.classList.remove('flipped');
+          secondCard.el.classList.remove('flipped');
+          resetSelection();
+          lock = false;
+        }, 700);
+      }
+    }
+
+    function resetSelection(){
+      firstCard = null;
+      secondCard = null;
+    }
+
+    function onWin(){
+      stopTimer();
+      // show modal
+      finalTime.textContent = formatTime(seconds);
+      finalMoves.textContent = moves;
+      finalScore.textContent = score;
+      winModal.style.display = 'flex';
+    }
+
+    function resetGame(newShuffle=true){
+      // reset
+      stopTimer();
+      resetTimer();
+      moves = 0; matches = 0; score = 0; started = false;
+      movesEl.textContent = moves;
+      scoreEl.textContent = score;
+      if(newShuffle) buildDeck();
+      renderBoard();
+      // ensure no locked states
+      lock = false; resetSelection();
+    }
+
+    // ----- init -----
+    buildDeck();
+    renderBoard();
+
+    // ----- UI events -----
+    shuffleBtn.addEventListener('click', () => {
+      resetGame(true);
+    });
+    restartBtn.addEventListener('click', () => {
+      resetGame(true);
+    });
+    playAgain.addEventListener('click', () => {
+      winModal.style.display = 'none';
+      resetGame(true);
+    });
+    closeModal.addEventListener('click', () => {
+      winModal.style.display = 'none';
+    });
+
+    // keyboard: r to restart
+    document.addEventListener('keydown', (e) => {
+      if(e.key.toLowerCase() === 'r') resetGame(true);
+    });
+
+    // expose a small API to window for debugging
+    window._game = {
+      reset: () => resetGame(true),
+      deck,
+      getState: () => ({moves, score, seconds, matches})
+    };
+
+    // Example: fetch score from backend
+fetch('/api/score')
+  .then(res => res.json())
+  .then(data => {
+    console.log("Score from backend:", data.score);
+    alert(data.message);
+  });
+
+  </script>
+</body>
+</html>

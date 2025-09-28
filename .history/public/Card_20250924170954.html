@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <script>
+        await fetch("http://localhost:3000/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "Hello",
+        });
+
+    </script>
+  </body>
+</html>

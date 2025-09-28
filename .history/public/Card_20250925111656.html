@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <input type="text" id="nameI">
+    <input type="number" id="ageI">
+    <button id="bt1" onclick="f1()">Send</button>
+    <h2>Saved Names<h2>
+    <ul id="list1"></ul>
+
+    <script>
+      let bt1= document.getElementById("bt1");
+      let list1= document.getElementById("list1");
+   
+    function f1(){
+      let name= document.getElementById("nameI").value;
+      let age= document.getElementById("ageI").value;
+      
+      fetch("http://localhost:3000/send")
+      .then(type=> type.json())
+      .then(data=> console.log(data))
+      
+    }
+    </script>
+  </body>
+</html>

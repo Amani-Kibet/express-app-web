@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <button onclick="f1()">Send</button>
+
+    <script>
+    function f1(){
+      fetch('http://localhost:3000/send', {
+        method: "GET"
+      })
+    .then(type=> type.json())
+    const x= response.json()
+    consoloe.log(x)
+    .then(data=> console.log("You received: "+ data))
+  }
+    </script>
+  </body>
+</html>

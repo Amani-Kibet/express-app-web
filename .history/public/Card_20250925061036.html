@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <button onclick="f1()">Send</button>
+
+    <script>
+    function f1(){
+      fetch('http://localhost:3000/send')
+    .then(type=> type.text())
+    .then(data=> console.log("You received: "+ data.message))
+  }
+    </script>
+  </body>
+</html>

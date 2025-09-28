@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Frontend to Express</title>
+</head>
+<body>
+  <h2>Send Data to Express</h2>
+  <input id="name" type="text" placeholder="Enter your name">
+  <button onclick="sendData()">Send</button>
+
+  <p id="response"></p>
+
+  <script>
+    async function sendData() {
+      const name = document.getElementById("name").value;
+
+      try {
+        const response = await fetch("http://localhost:3000/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username: name })
+        });
+
+        const result = await response.json();
+        document.getElementById("response").innerText =
+          `${result.message} | Username: ${result.data.username}`;
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    }
+  </script>
+</body>
+</html>

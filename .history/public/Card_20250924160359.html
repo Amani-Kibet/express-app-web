@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <input id="name" placeholder="Enter name" />
+    <button onclick="sendData()">Send</button>
+    <h2>Stored Names:</h2>
+    <ul id="namesList"></ul>
+
+    <script>
+      async function sendData() {
+        const name = document.getElementById("name").value;
+
+        // Send to backend
+        await fetch("http://localhost:3000/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name }),
+        });
+
+        // Refresh names list
+        loadNames();
+      }
+
+      async function loadNames() {
+        const res = await fetch("http://localhost:3000/users");
+        const users = await res.json();
+
+        const list = document.getElementById("namesList");
+        list.innerHTML = ""; // clear old
+        users.forEach(user => {
+          const li = document.createElement("li");
+          li.textContent = user.name;
+          list.appendChild(li);
+        });
+      }
+
+      // Load existing names when page opens
+      loadNames();
+    </script>
+  </body>
+</html>

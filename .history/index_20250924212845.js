@@ -1,0 +1,19 @@
+const express = require("express");
+const cors = require("cors"); // import cors
+const app = express();
+
+app.use(cors()); // allow all origins
+app.use(express.json());
+
+// Handle POST request from frontend
+app.post("/send", (req, res) => {
+  console.log("Received data:", req.body); // log data to terminal
+  res.json({ message: "Data received successfully!", data: req.body });
+});
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀 Use POST /send to send data.");
+});
+
+app.listen(3000, () => {
+  console.log("Started");
+});

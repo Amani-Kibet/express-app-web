@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+    <title>Profile Page</title>
+    <style>
+        body{
+            background-color: cyan;
+        }
+        #container{
+            background-color: rgb(97, 203, 235);
+            height: 24rem;
+        }
+        #image{
+            background: url(http://localhost:3000/pictures/profilePic.jpg);
+            background-size: cover;
+            width: 10rem;
+            height: 10rem;
+        }
+        .labels{
+            color: red;
+            font-size: 18px;
+            margin-top: 1rem;
+            border-radius: 6px;
+
+        }
+        #btn1{
+            background-color: orange;
+            padding: 8px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Profile Information</h2>
+        <div id="image"></div>
+        <input type="text" id="nameT" class="labels" placeholder="Enter your name" style="font-size: 15px; background: #ecc5e1">
+        <p id="phoneT" class="labels">Phone Number: </p>
+        <p id="passT" class="labels">Password: </p>
+        <button id="btn1" onclick="getInfo()">Get Information</button>
+    </div>
+</body>
+<script>
+let phoneT= document.getElementById("phoneT");
+let passT= document.getElementById("passT");
+
+async function getInfo(){
+let nameT= document.getElementById("nameT").value;
+fetch("http://localhost:3000/path3", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({name: `${nameT}`})
+})
+await fetch("http://localhost:3000/path3")
+.then(type=> type.json())
+.then(data=>{
+    console.log(data[0].name)
+})
+}
+</script>
+</html>

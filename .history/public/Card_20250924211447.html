@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <input id="name" placeholder="Enter name" />
+    <button onclick="f1()">Send</button>
+    <h2>Stored Names:</h2>
+    <ul id="namesList"></ul>
+
+    <script>
+      function f1 () {
+      fetch('http://localhost:3000/send',{
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain'},
+        body: 'Amani'
+      });
+      alert("Name Sent")
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <button id="bt1" onclick="f1()">Send</button>
+    <button id="bt2" onclick="f2()">Receive</button>
+
+    <script>
+      let bt1= document.getElementById("bt1")
+      let bt2= document.getElementById("bt2")
+    function f2(){
+      fetch("http://localhost:3000/receive")
+      .then(type=> type.text())
+      .then(data=> bt2.innerHTML=`${data}`)
+    }
+    function f1(){
+      fetch("http://localhost:3000/receive2")
+      .then(type=> type.text())
+      .then(data=> bt1.innerHTML=`${data}`)
+    }
+    </script>
+  </body>
+</html>

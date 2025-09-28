@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <title>Main Menu</title>
+    <style>
+        #container{
+            background-color: rgb(136, 183, 245);
+            width: 30rem;
+            height: 26rem;
+        }
+        #title{
+            position: relative;
+            width: 10rem;
+            height: 2rem;
+            top: 10px;
+            left: 12rem;
+            font-size: 20px;
+            color: red;
+        }
+        #pic{
+            width: 6rem;
+            height: 6rem;
+            background-color: rgb(106, 248, 50);
+        }
+        .labels{
+            font-size: 15px;
+            width: 4rem;
+            height: 1rem;
+            color: blue;
+            position: relative;
+            left: 7rem;
+            bottom: 6rem;
+        }
+        
+    </style>
+    </head>
+    <body bgcolor="cyan">
+        <div id="container">
+            <h4 id="title"> Main Menu</h4>
+            <div id="pic">Pic</div>
+            <h4 class="labels">Name</h4>
+            <h4 class="labels">phone</h4>
+            <button id="bt1" onclick="f1">Button 1</button>
+        </div>
+    </body>
+    <script>
+        function f1(){
+        fetch("http://localhost:3000/path5",{
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({name: "Kibet"})
+          })
+        }
+    </script>
+    </html>

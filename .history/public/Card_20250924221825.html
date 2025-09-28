@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Save Name</title>
+  </head>
+  <body>
+    <button onclick="f1()">Send</button>
+
+    <script>
+    function f1(){
+      fetch('http://localhost:3000/send', {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: "Amani K"
+    })
+      
+  }
+    </script>
+  </body>
+</html>
