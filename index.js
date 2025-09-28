@@ -50,4 +50,4 @@ app.post("/path3", async (req, res)=>{
     console.log(arr1)
   })
 
-app.listen(3000, ()=>console.log("Backend Started"))
+  app.listen(process.env.PORT || 3000, ()=>console.log("Backend Started"))
