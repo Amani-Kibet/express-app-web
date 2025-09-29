@@ -8,26 +8,29 @@ app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 
-mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatabase?retryWrites=true&w=majority")
+mongoose.connect("mongodb://localhost:27017/Users")
 .then(()=> console.log("Database Connected Successfully"))
 .catch(err=> console.log("Database Failed: "+ err))
 
-let labels= new mongoose.Schema({name: String, phone: String, password: String, piclink: String})
+let labels= new mongoose.Schema({name: String, phone: String, password: String, piclink: String, message: String})
 let contacts= mongoose.model("User Contacts", labels)
+
+let labels2= new mongoose.Schema({input: String, output: String})
+let responses= mongoose.model("Responses", labels2)
 
 let storage1= multer.diskStorage({
   destination: (req, file, cb)=>{
     cb(null, "pictures/")
   },
   filename: (req, file, cb)=>{
-    cb(null, `${new Date().getTime()}- ${file.originalname}`)
+    cb(null, `${new Date().getMinutes()}-${file.originalname}`)
   }
 })
 filex= multer({storage: storage1})
 app.post("/path1", filex.single("image"), (req, res)=>{
   let json= JSON.parse(req.body.json)
   console.log(req.file.path);
-  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getTime()}- ${req.file.originalname}`})
+  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`})
   user.save()
   res.json({feedback: `${json.name}  Received and Saved✅`})
 })
@@ -39,14 +42,26 @@ app.post("/path3", async (req, res)=>{
   })
 
   app.post("/path4", async (req, res)=>{
-    let arr= await contacts.find({phone: req.body.phone, password: req.body.pass});
-    let arr1;
-    if(arr.length==0){arr1=[{name: "Null"}]} else{arr1=arr}
-    res.json({name: arr1[0].name})
-    console.log(arr1)
+    let arr1= await contacts.find({phone: req.body.phone, password: req.body.pass});
+    let arra;
+    if(arr1.length==0){arr1=[{name: "Null"}]} else{arra=arr1}
+    let arr2= await contacts.find({phone: req.body.phone2});
+    console.log(arr2)
+    res.json({info1: arr1[0], info2: arr2[0]})
+  })
+
+  app.post("/path5", async (req, res)=>{
+    await contacts.updateOne(
+      {phone: req.body.phone2},
+      {$set: {message: `${req.body.input}`}}
+    )
+    let arr3= await contacts.find({phone: req.body.phone1});
+    res.json({reply: arr3[0].message})
   })
 
   app.get("/", (req, res)=>{
     res.send("Is it working yoh...")
   })
+ 
+  console.log("updated")
   app.listen(process.env.PORT || 3000, ()=>console.log("Backend Started"))

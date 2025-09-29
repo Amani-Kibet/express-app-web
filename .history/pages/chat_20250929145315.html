@@ -448,7 +448,7 @@
     <input required type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
     <input required type="password" class="inputs" id="passI" placeholder="Enter Password">
     <input required type="number" class="inputs" id="phone2I" placeholder="Enter Phone number to chat with...">
-    <button id="submit" onclick="f1()">Submit</button>
+    <button id="submit" >Submit</button>
     <a id="link1" class="links" href="http://localhost:3000">Forgot Password?</a>
     <a class="links" id="link2" href="/pages/signup/signIn.html">Sign Up</a>
 
@@ -529,137 +529,115 @@
   let pic= document.getElementById("pic");
   let nameinfo= document.getElementById("nameinfo");
   let phoneinfo= document.getElementById("phoneinfo");
-  let sendbt= document.getElementById("sendbtn")
+  let sendbt= document.getElementById("sendbtn");
+  let submit= document.getElementById("submit");
 
-  function f1(){
-    let phoneI= document.getElementById("phoneI").value;
-    let passI= document.getElementById("passI").value;
-    let phone2I= document.getElementById("phone2I").value;
-  
-    fetch("/path4",{
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, phone2: `${phone2I}`})
-    })
-    .then(type=> type.json())
-    .then(data=>{
-      if(data.name=="Null"){
-        phoneC.style.color="red";
-        phoneC.type="text";
-        phoneC.value+=" Is Not Found";
-  
-        setTimeout(()=>{
-          phoneC.style.color="blue";
-          phoneC.type="number";
-        }, 4000);
-      } else {
-        msg.style.display="block";
-        msgT.innerHTML=`Welcome Back ${data.info1.name}!`;
-        setTimeout(()=>{
-          loginPage.style.display="none";
-          chatPage.style.display="block";
-        }, 80);
-      }
-  
-      //Chat Page Inside Data
-      pic.style.background= `url(/pictures/${data.info2.piclink})`;
-      nameinfo.innerHTML= `${data.info2.name}`;
-      phoneinfo.innerHTML= `${data.info2.phone}`;
-  
-      pic.style.backgroundSize= "cover";
-      function toggleDropdown() { const dropdown = document.getElementById("dropdown"); dropdown.style.display = dropdown.style.display==="flex"?"none":"flex"; }
-      function toggleDarkMode() { document.body.classList.toggle("dark"); }
-      function openModal() { document.getElementById("modal").style.display="flex"; document.getElementById("dropdown").style.display="none"; }
-      function closeModal() { document.getElementById("modal").style.display="none"; }
-      function changeBackgroundColor(color) { document.body.style.background=color; }
-      function uploadBackground(event) {
-        const file = event.target.files[0];
-        if(file){
-          const reader = new FileReader();
-          reader.onload = function(e){
-            document.body.style.background = `url(${e.target.result}) no-repeat center/cover`;
-            document.body.style.backgroundSize = "cover";
-          }
-          reader.readAsDataURL(file);
+  submit.addEventListener("click", ()=>{
+  let phoneI= document.getElementById("phoneI").value;
+  let passI= document.getElementById("passI").value;
+  let phone2I= document.getElementById("phone2I").value;
+
+  fetch("/path4",{
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, phone2: `${phone2I}`})
+  })
+  .then(type=> type.json())
+  .then(data=>{
+    if(data.name=="Null"){
+      phoneC.style.color="red";
+      phoneC.type="text";
+      phoneC.value+=" Is Not Found";
+
+      setTimeout(()=>{
+        phoneC.style.color="blue";
+        phoneC.type="number";
+      }, 4000);
+    } else
+    {
+      msg.style.display="block";
+      msgT.innerHTML=`Welcome Back ${data.info1.name}!`;
+      setTimeout(()=>{
+        loginPage.style.display="none";
+        chatPage.style.display="block";
+      }, 80);
+  })
+  )};
+    //Chat Page Inside Data
+    pic.style.background= `url(/pictures/${data.info2.piclink})`;
+    nameinfo.innerHTML= `${data.info2.name}`;
+    phoneinfo.innerHTML= `${data.info2.phone}`;
+
+    pic.style.backgroundSize= "cover";
+    function toggleDropdown() { const dropdown = document.getElementById("dropdown"); dropdown.style.display = dropdown.style.display==="flex"?"none":"flex"; }
+    function toggleDarkMode() { document.body.classList.toggle("dark"); }
+    function openModal() { document.getElementById("modal").style.display="flex"; document.getElementById("dropdown").style.display="none"; }
+    function closeModal() { document.getElementById("modal").style.display="none"; }
+    function changeBackgroundColor(color) { document.body.style.background=color; }
+    function uploadBackground(event) {
+      const file = event.target.files[0];
+      if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+          document.body.style.background = `url(${e.target.result}) no-repeat center/cover`;
+          document.body.style.backgroundSize = "cover";
         }
+        reader.readAsDataURL(file);
       }
-  
-      // Typing effect for bot
-      function typeMessage(text, container) {
-        container.style.whiteSpace = "pre-wrap";
-        let i = 0;
-        const interval = setInterval(() => {
-          container.textContent += text.charAt(i);
-          i++;
-          if (i === text.length) clearInterval(interval);
-        }, 50);
-      }
-      
-      
-      sendbt.addEventListener("click", () => {
-        const input = document.getElementById("message");
-        const text = input.value;
-        if (text === "") return;
-  
-        const chat = document.getElementById("chat");
-        const bubble = document.createElement("div");
-        bubble.className = "chat-bubble chat-right";
-        bubble.textContent = text;            // use textContent, not innerText
-        bubble.style.whiteSpace = "pre-wrap";
-        
-        chat.appendChild(bubble);
+    }
+
+    // Typing effect for bot
+    function typeMessage(text, container) {
+      let i = 0;
+      const interval = setInterval(() => {
+        container.innerText += text.charAt(i);
+        i++;
+        if (i === text.length) clearInterval(interval);
+      }, 50); // typing speed
+    }
+    
+    sendbt.addEventListener("click", () => {
+      const input = document.getElementById("message");
+      const text = input.value.trim().toLowerCase();
+   
+      fetch("/path5", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({name1: `${data.info1.name}`, input: `${text}`, name2: `${data.info2}`})
+      })
+      const reply = document.createElement("div");
+        reply.className = "chat-bubble chat-left";
+        chat.appendChild(reply);
+    
+        // Check JSON for response
+        let botReply = "I don't understand 🤔";
+    
         chat.scrollTop = chat.scrollHeight;
-        input.value = "";
-  
-        fetch("/path5", {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({
-            phone1: data.info1.phone,
-            input: text,
-            phone2: data.info2.phone
-          })
-        })
-        .then(type => type.json())
-        .then(data => {
-          const typing = document.createElement("div");
-          typing.className = "typing-indicator";
-          chat.appendChild(typing);
-          chat.scrollTop = chat.scrollHeight;
-        
-          setTimeout(() => {
-            typing.remove();
-            const reply = document.createElement("div");
-            reply.className = "chat-bubble chat-left";
-            reply.style.whiteSpace = "pre-wrap";
-
-            chat.appendChild(reply);
-            typeMessage(data.reply, reply);
-
-            chat.scrollTop = chat.scrollHeight;
-          }, 1500);
-        });
-      });
-  
-      // Profile pic zoom modal
-      const picModal = document.getElementById("picModal");
-      const modalImg = document.getElementById("modalImg");
-  
-      pic.addEventListener("click", ()=>{
-        picModal.style.display = "flex";
-      });
-  
-      function closePicModal(){
-        const img = document.querySelector("#picModal img");
-        img.style.animation = "zoomOut 0.3s forwards";
-        setTimeout(()=>{
-          picModal.style.display = "none";
-          img.style.animation = "zoomIn 0.4s forwards";
-        }, 300);
-      }
+      }, 1500);
     });
-  }
-  
+    
+    
+
+    // Profile pic zoom modal
+    const picModal = document.getElementById("picModal");
+    const modalImg = document.getElementById("modalImg");
+
+    pic.addEventListener("click", ()=>{
+      const bg = profilePic.style.backgroundImage.replace(/url\((['"])?(.*?)\1\)/,'$2');
+      modalImg.src = bg;
+      picModal.style.display = "flex";
+    });
+
+    function closePicModal(){
+      const img = document.querySelector("#picModal img");
+      img.style.animation = "zoomOut 0.3s forwards";
+      setTimeout(()=>{
+        picModal.style.display = "none";
+        img.style.animation = "zoomIn 0.4s forwards";
+      }, 300);
+    }
+  });
+}
   </script>
 </body>
 </html>

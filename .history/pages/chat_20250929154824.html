@@ -586,27 +586,23 @@
   
       // Typing effect for bot
       function typeMessage(text, container) {
-        container.style.whiteSpace = "pre-wrap";
         let i = 0;
         const interval = setInterval(() => {
-          container.textContent += text.charAt(i);
+          container.innerText += text.charAt(i);
           i++;
           if (i === text.length) clearInterval(interval);
-        }, 50);
+        }, 50); // typing speed
       }
-      
       
       sendbt.addEventListener("click", () => {
         const input = document.getElementById("message");
-        const text = input.value;
+        const text = input.value.toLowerCase();
         if (text === "") return;
   
         const chat = document.getElementById("chat");
         const bubble = document.createElement("div");
         bubble.className = "chat-bubble chat-right";
-        bubble.textContent = text;            // use textContent, not innerText
-        bubble.style.whiteSpace = "pre-wrap";
-        
+        bubble.innerText = text;
         chat.appendChild(bubble);
         chat.scrollTop = chat.scrollHeight;
         input.value = "";
@@ -631,11 +627,9 @@
             typing.remove();
             const reply = document.createElement("div");
             reply.className = "chat-bubble chat-left";
-            reply.style.whiteSpace = "pre-wrap";
-
             chat.appendChild(reply);
+        
             typeMessage(data.reply, reply);
-
             chat.scrollTop = chat.scrollHeight;
           }, 1500);
         });
