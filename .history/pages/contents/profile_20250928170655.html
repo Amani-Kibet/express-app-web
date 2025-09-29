@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <title>Profile Page</title>
+    <style>
+        body{
+            background-color: cyan;
+        }
+        #container{
+            background-color: rgb(97, 203, 235);
+            height: 24rem;
+            width: 28rem
+        }
+        #image {
+            background: url(/pictures/profilePic.jpg) center/cover no-repeat;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem auto;
+            border-radius: 50%;
+            border: 4px solid #48b1bf;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .labels{
+            color: rgb(170, 10, 10);
+            font-size: 18px;
+            margin-top: 1rem;
+            border-radius: 6px;
+
+        }
+        #btn1{
+            background-color: orange;
+            padding: 8px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Profile Information</h2>
+        <div id="image"></div>
+        <input type="text" id="nameT" class="labels" placeholder="Enter your name" style="font-size: 15px; background: #ecc5e1; color: rgb(0, 38, 255)">
+        <p id="phoneT" class="labels"></p>
+        <p id="passT" class="labels"></p>
+        <button id="btn1" onclick="getInfo()">Get Information</button>
+    </div>
+</body>
+<script>
+let phoneV= document.getElementById("phoneV");
+let passV= document.getElementById("passV");
+
+function getInfo(){
+let nameT= document.getElementById("nameT").value;
+fetch("/path3", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({name: `${nameT}`})
+})
+.then(type=> type.json())
+.then(data=>{
+    let info= data.arr[0]
+    phoneT.innerHTML="Phone Number: ";
+    passT.innerHTML="Password: ";
+    phoneT.innerHTML+= `  ${info.phone}`;
+    passT.innerHTML+= `  ${info.password}`;
+})
+}
+</script>
+</html>

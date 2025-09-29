@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, cyan, lightblue);
+      overflow: hidden;
+    }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+      font-size: 16px;
+
+      justify-content: space-between;
+      padding: 0 2%;
+    }
+
+    /* Top bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 80px;
+      background: #2575fc;
+      color: white;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .user-info h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #ffffffff;
+    }
+
+    .user-info p {
+      margin: 2px 0 0;
+      font-size: 1rem;
+      color: #d0f8fcff;
+    }
+
+    .profile-pic {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: url("https://i.pravatar.cc/100") no-repeat center/cover;
+      border: 2px solid #eee;
+      cursor: pointer;
+    }
+
+    .settings-btn {
+      font-size: 1.4rem;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      left: 15px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      width: 180px;
+      z-index: 5;
+    }
+
+    .dropdown button {
+      background: none;
+      border: none;
+      padding: 12px 15px;
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .dropdown button:hover { background: #f0f0f0; }
+
+    /* Chat container */
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* start chats at the top */
+  padding: 18px 15px;
+  overflow-y: auto;
+}
+    .chat-bubble {
+      max-width: 80%;
+      padding: 14px 18px;
+      margin: 10px 0;
+      border-radius: 16px;
+      font-size: 1rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .chat-left {
+      background: #f1f1f1;
+      align-self: flex-start;
+      border-top-left-radius: 4px;
+    }
+
+    .chat-right {
+      background: #667eea;
+      color: #fff;
+      align-self: flex-end;
+      border-top-right-radius: 4px;
+    }
+
+    /* Chat input */
+    .chat-input {
+      display: flex;
+      padding: 12px 15px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .chat-input button {
+      margin-left: 10px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 50%;
+      background: #667eea;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .chat-input button:hover { background: #5563d6; }
+
+    /* Dark theme */
+    body.dark {
+      background: #1e1e1e;
+      color: #ddd;
+    }
+    body.dark .top-bar { background: #2c2c2c; color: #ddd; }
+    body.dark .dropdown { background: #2c2c2c; color: #ddd; }
+    body.dark .chat-left { background: #333; color: #ddd; }
+    body.dark .chat-right { background: #444; }
+
+    /* Settings modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .close-btn {
+      background: #667eea;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Neon typing indicator */
+    .typing-indicator {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top: 3px solid #00ffe0;
+      border-right: 3px solid #ff00ff;
+      border-bottom: 3px solid #00ff88;
+      border-left: 3px solid #ffea00;
+      animation: spin 1.2s linear infinite, neon-glow 1.5s ease-in-out infinite alternate;
+      margin: 10px 0;
+      align-self: flex-start;
+    }
+
+    @keyframes spin { 0%{ transform:rotate(0deg);}100%{transform:rotate(360deg);} }
+    @keyframes neon-glow { 0%{box-shadow:0 0 8px #0ff,0 0 15px #0ff;} 100%{box-shadow:0 0 20px #f0f,0 0 40px #ff0;} }
+
+    /* Profile pic zoom modal */
+    .pic-modal {
+      display: none;
+      position: fixed;
+      top:0; left:0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      animation: fadeIn 0.3s ease;
+    }
+    .pic-modal img {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      transform: scale(0.5);
+      animation: zoomIn 0.4s forwards;
+    }
+    @keyframes fadeIn { from{background:rgba(0,0,0,0);} to{background:rgba(0,0,0,0.7);} }
+    @keyframes zoomIn { from{transform:scale(0.3);opacity:0;} to{transform:scale(1);opacity:1;} }
+    @keyframes zoomOut { from{transform:scale(1);opacity:1;} to{transform:scale(0.3);opacity:0;} }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div style="display: flex; align-items: center;">
+      <div class="settings-btn" onclick="toggleDropdown()">☰</div>
+      <div class="user-info">
+        <h2 id="name">Amani Kibet</h2>
+        <p id="phone">+254 712 345 678</p>
+      </div>
+    </div>
+    <div class="profile-pic"></div>
+
+    <div class="dropdown" id="dropdown">
+      <button onclick="toggleDarkMode()">🌙 Dark Theme</button>
+      <button onclick="openModal()">⚙️ Settings</button>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chat">
+    <div class="chat-bubble chat-left">Hey, welcome to your chat!</div>
+    <div class="chat-bubble chat-right">Thanks, it looks cool 😎</div>
+  </div>
+
+  <!-- Chat Input -->
+  <div class="chat-input">
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Settings</h3>
+      <label>🎨 Pick Background Color</label><br>
+      <input type="color" onchange="changeBackgroundColor(this.value)"><br>
+      <label>🖼 Upload Background</label><br>
+      <input type="file" accept="image/*" onchange="uploadBackground(event)"><br>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Profile Picture Zoom Modal -->
+  <div class="pic-modal" id="picModal" onclick="closePicModal()">
+    <img id="modalImg" src="https://i.pravatar.cc/100" alt="Profile Picture">
+  </div>
+
+  <script>
+    function toggleDropdown() { const dropdown = document.getElementById("dropdown"); dropdown.style.display = dropdown.style.display==="flex"?"none":"flex"; }
+    function toggleDarkMode() { document.body.classList.toggle("dark"); }
+    function openModal() { document.getElementById("modal").style.display="flex"; document.getElementById("dropdown").style.display="none"; }
+    function closeModal() { document.getElementById("modal").style.display="none"; }
+    function changeBackgroundColor(color) { document.body.style.background=color; }
+    function uploadBackground(event) {
+      const file = event.target.files[0];
+      if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+          document.body.style.background = `url(${e.target.result}) no-repeat center/cover`;
+          document.body.style.backgroundSize = "cover";
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Typing effect for bot
+    function typeMessage(text, container){
+      let i = 0;
+      const interval = setInterval(()=>{
+        container.innerText += text.charAt(i);
+        i++;
+        if(i === text.length) clearInterval(interval);
+      },50);
+    }
+
+    function sendMessage(){
+      const input = document.getElementById("message");
+      const text = input.value.trim();
+      if(text==="") return;
+
+      const chat = document.getElementById("chat");
+
+      // User bubble
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble chat-right";
+      bubble.innerText = text;
+      chat.appendChild(bubble);
+      chat.scrollTop = chat.scrollHeight;
+      input.value = "";
+
+      // Neon typing indicator
+      const typing = document.createElement("div");
+      typing.className = "typing-indicator";
+      chat.appendChild(typing);
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(()=>{
+        typing.remove();
+        const reply = document.createElement("div");
+        reply.className = "chat-bubble chat-left";
+        chat.appendChild(reply);
+        typeMessage("Got it 👍", reply);
+        chat.scrollTop = chat.scrollHeight;
+      }, 1500);
+    }
+
+    // Profile pic zoom modal
+    const profilePic = document.querySelector(".profile-pic");
+    const picModal = document.getElementById("picModal");
+    const modalImg = document.getElementById("modalImg");
+
+    profilePic.addEventListener("click", ()=>{
+      const bg = profilePic.style.backgroundImage.replace(/url\((['"])?(.*?)\1\)/,'$2');
+      modalImg.src = bg;
+      picModal.style.display = "flex";
+    });
+
+    function closePicModal(){
+      const img = document.querySelector("#picModal img");
+      img.style.animation = "zoomOut 0.3s forwards";
+      setTimeout(()=>{
+        picModal.style.display = "none";
+        img.style.animation = "zoomIn 0.4s forwards";
+      }, 300);
+    }
+  </script>
+</body>
+</html>

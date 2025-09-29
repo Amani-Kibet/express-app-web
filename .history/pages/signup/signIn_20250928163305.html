@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    /* Reset default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #board {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.25);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    .inputs, #picC {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    .inputs:focus, #picC:focus-within {
+      box-shadow: 0 0 10px #00c6ff;
+    }
+
+    #picC {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    #submit {
+      background: linear-gradient(135deg, #ff9966, #ff5e62);
+      color: white;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #submit:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    #msg {
+      display: none;
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    .links {
+      display: block;
+      margin-top: 1rem;
+      text-align: center;
+      color: yellow;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .links:hover {
+      color: #fff;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Small devices adjustments */
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.5rem;
+      }
+      #board {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="board">
+    <h2>Sign In</h2>
+    <input type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
+    <input type="password" class="inputs" id="passI" placeholder="Enter Password">
+    <input type="text" class="inputs" id="nameI" placeholder="Enter User Name">
+    
+    <div id="picC">
+      <label for="picI">📸 Upload Profile Picture</label>
+      <input id="picI" type="file" name="image">
+    </div>
+    
+    <button id="submit" onclick="f1()">Submit</button>
+    <a class="links" id="link1" href="/pages/signup/logIn.html">Already have an account?</a>
+    
+    <div id="msg">
+      <p id="loginT">Please wait...</p>
+      <h3 id="msgT">No text returned</h3>
+    </div>
+  </div>
+
+  <script>
+    let msgT= document.getElementById("msgT");
+    let msg= document.getElementById("msg");
+
+    function f1(){
+      let phoneI= document.getElementById("phoneI").value;
+      let passI= document.getElementById("passI").value;
+      let nameI= document.getElementById("nameI").value;
+      let picI= document.getElementById("picI").files[0];
+
+      let env= new FormData();
+      env.append("image", picI);
+
+      fetch("/path1", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({phone: phoneI, pass: passI, name: nameI})
+      })
+      .then(res=> res.text())
+      .then(data=> {
+        msg.style.display="block";
+        msgT.innerHTML=`${phoneI} ${data}`;
+        setTimeout(()=>{
+          msg.style.display="none";
+          window.location.href="/pages/signup/login.html";
+        }, 4000);
+      });
+
+      fetch("/path2", {
+        method: "POST",
+        body: env
+      });
+    }
+  </script>
+</body>
+</html>

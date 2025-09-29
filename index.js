@@ -8,32 +8,28 @@ app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 
-mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatabase?retryWrites=true&w=majority")
+mongoose.connect("mongodb://localhost:27017/Users")
 .then(()=> console.log("Database Connected Successfully"))
 .catch(err=> console.log("Database Failed: "+ err))
 
-let labels= new mongoose.Schema({name: String, phone: String, password: String})
+let labels= new mongoose.Schema({name: String, phone: String, password: String, piclink: String})
 let contacts= mongoose.model("User Contacts", labels)
 
 let storage1= multer.diskStorage({
-  destination: function(req, file, cb){
+  destination: (req, file, cb)=>{
     cb(null, "pictures/")
   },
-  filename: function(req, file, cb){
-    cb(null, "a.jpg")
+  filename: (req, file, cb)=>{
+    cb(null, `${new Date().getTime()}- ${file.originalname}`)
   }
 })
-app.post("/path1", (req, res)=>{
-  console.log(req.body);
-  let user= new contacts({name: req.body.name, phone: req.body.phone, password: req.body.pass})
-  user.save()
-  console.log(req.body.name + " Received and Saved");
-  res.send("Received and Saved ✅")
-})
-
 filex= multer({storage: storage1})
-app.post("/path2", filex.single("image"), (req, res)=>{
-console.log("File Received")
+app.post("/path1", filex.single("image"), (req, res)=>{
+  let json= JSON.parse(req.body.json)
+  console.log(req.file.path);
+  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getTime()}- ${req.file.originalname}`})
+  user.save()
+  res.json({feedback: `${json.name}  Received and Saved✅`})
 })
 
 app.post("/path3", async (req, res)=>{
