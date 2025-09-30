@@ -27,7 +27,6 @@ let storage1= multer.diskStorage({
 filex= multer({storage: storage1})
 app.post("/sign/path1", filex.single("image"), (req, res)=>{
   let json= JSON.parse(req.body.json)
-  console.log(req.file.path);
   let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`})
   user.save()
   res.json({feedback: `${json.name}  Received and Saved✅`})
@@ -36,9 +35,10 @@ app.post("/sign/path1", filex.single("image"), (req, res)=>{
 app.post("/chat/path1", async (req, res)=>{
   let arr1= await contacts.find({phone: req.body.phone, password: req.body.pass});
   let arra;
+  let arrb;
   if(arr1.length==0){arr1=[{name: "Null"}]} else{arra=arr1}
   let arr2= await contacts.find({phone: req.body.phone2});
-  console.log(arr2)
+  if(arr2.length==0){arr2=[{name: "Null"}]} else{arrb=arr2}
   res.json({info1: arr1[0], info2: arr2[0]})
 })
 
@@ -57,7 +57,6 @@ app.post("/chat/path3", async (req, res)=>{
 app.post("/path3", async (req, res)=>{
   var arr= await contacts.find({name: `${req.body.name}`});
   res.json({arr: arr})
-  console.log(arr)
   })
 
   app.get("/path/online", async (req, res) => {
@@ -67,121 +66,167 @@ app.post("/path3", async (req, res)=>{
  
   app.get("/", (req, res) => {
     res.send(`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Popup Example</title>
-<style>
-body {
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unity Welcome</title>
+  <style>
+  body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-#overlay {
+    overflow: hidden;
+  }
+  
+  /* Overlay */
+  #overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.6s ease;
     z-index: 1000;
-}
-#overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-#popup {
-    background: linear-gradient(135deg, #ff8c42, #ff5e62);
-    padding: 2rem 3rem;
+  }
+  #overlay.show {
+    opacity: 1; visibility: visible;
+  }
+  
+  /* Popup */
+  #popup {
+    background: linear-gradient(135deg, #ff5e62, #ff8c42);
+    padding: 3rem 4rem;
     border-radius: 20px;
     text-align: center;
     color: white;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-    transform: scale(0);
-    transition: transform 0.3s ease;
+    box-shadow: 0 0 25px rgba(255, 94, 98, 0.8),
+                0 0 50px rgba(255, 140, 66, 0.6);
+    transform: scale(0) rotate(-10deg);
+    animation: bounceIn 1s forwards ease-in-out;
     max-width: 90%;
-}
-#overlay.show #popup {
-    transform: scale(1);
-}
-#popup h2 {
-    margin-bottom: 1rem;
-}
-#popup button {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 12px;
-    background: #fff;
-    color: #ff5e62;
+    position: relative;
+  }
+  
+  /* Neon text animation */
+  #popup h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px #fff, 
+                 0 0 20px #00c6ff, 
+                 0 0 40px #00c6ff, 
+                 0 0 80px #00c6ff;
+    animation: neonPulse 2s infinite alternate;
+  }
+  
+  /* Typing text */
+  #typing {
+    font-size: 1.3rem;
     font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-}
-#popup button:hover {
-    transform: scale(1.05);
-    background: #ffe5e0;
-}
-#closeBtn {
+    color: #fff;
+    text-shadow: 0 0 10px #ff5e62, 0 0 20px #ff8c42;
+    min-height: 2rem;
+  }
+  
+  /* Animations */
+  @keyframes bounceIn {
+    0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    60% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+    80% { transform: scale(0.95) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  
+  @keyframes neonPulse {
+    from { text-shadow: 0 0 10px #00c6ff, 0 0 20px #ff5e62; }
+    to { text-shadow: 0 0 20px #fff, 0 0 40px #ff8c42; }
+  }
+  
+  /* Close button */
+  #closeBtn {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 1rem; right: 1rem;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: white;
     cursor: pointer;
-}
-@media (max-width: 500px) {
-    #popup {
-        padding: 1.5rem 2rem;
-    }
-}
-</style>
-</head>
-<body>
-<div id="overlay">
+    transition: transform 0.2s;
+  }
+  #closeBtn:hover { transform: scale(1.2) rotate(10deg); }
+  </style>
+  </head>
+  <body>
+  <div id="overlay">
     <div id="popup">
-        <button id="closeBtn">&times;</button>
-        <h2>Looking for Unity?</h2>
-        <button id="goBtn">Click Here</button>
+      <button id="closeBtn">&times;</button>
+      <h2>🌐 Unity Global Connect</h2>
+      <div id="typing"></div>
     </div>
-</div>
-<script>
-const overlay = document.getElementById("overlay");
-const goBtn = document.getElementById("goBtn");
-const closeBtn = document.getElementById("closeBtn");
-window.addEventListener("load", () => {
+  </div>
+  
+  <script>
+  const overlay = document.getElementById("overlay");
+  const typingEl = document.getElementById("typing");
+  const closeBtn = document.getElementById("closeBtn");
+  
+  window.addEventListener("load", () => {
     overlay.classList.add("show");
-});
-goBtn.addEventListener("click", () => {
-    window.location.href = "/pages/home.html";
-});
-closeBtn.addEventListener("click", () => {
+    startTyping();
+  });
+  
+  closeBtn.addEventListener("click", () => {
     overlay.classList.remove("show");
-});
-overlay.addEventListener("click", (e) => {
-    if(e.target === overlay){
-        overlay.classList.remove("show");
+    window.location.href="/pages/home.html"
+  });
+  
+  // Typing + deleting effect
+  const messages = [
+    "Welcome to Unity",
+    "Connect to anyone globally",
+    "Fast and secure",
+    "Share the link to connect...",
+    "Starting..."
+  ];
+  let msgIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  
+  function startTyping() {
+    const currentMsg = messages[msgIndex];
+    if (!isDeleting) {
+      typingEl.textContent = currentMsg.slice(0, charIndex++);
+      if (charIndex > currentMsg.length) {
+        isDeleting = true;
+        setTimeout(startTyping, 1000);
+        return;
+      }
+    } else {
+      typingEl.textContent = currentMsg.slice(0, charIndex--);
+      if (charIndex < 0) {
+        isDeleting = false;
+        msgIndex++;
+        if (msgIndex >= messages.length) {
+          // Redirect after "Starting..."
+          setTimeout(() => window.location.href="/pages/home.html", 2000);
+          return;
+        }
+      }
     }
-});
-</script>
-</body>
-</html>
+    setTimeout(startTyping, isDeleting ? 60 : 100);
+  }
+  </script>
+  </body>
+  </html>
     `);
-});
-
+  });  
 
   app.listen(process.env.PORT || 3000, ()=>console.log("Backend Started"))

@@ -532,7 +532,7 @@
     <input required type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
     <input required type="password" class="inputs" id="passI" placeholder="Enter Password">
     <input required type="number" class="inputs" id="phone2I" placeholder="Enter Phone number to chat with...">
-    <button id="submit" onclick="f1()">Submit</button>
+    <button id="submit" onclick="f1(event)">Submit</button>
     <a id="link1" class="links" href="/pages/personalInfo.html">Forgot Password?</a>
     <a class="links" id="link2" href="/pages/signIn.html">Sign Up</a>
     </form>
@@ -620,7 +620,8 @@
   let bt1= document.getElementById("submit")
   let msgT= document.getElementById("msgT")
   let msg= document.getElementById("msg")
-  let phoneC= document.getElementById("phoneI");
+  let phone1C= document.getElementById("phoneI");
+  let phone2C= document.getElementById("phone2I");
   let passC= document.getElementById("passI")
   let loginPage= document.getElementById("loginPage");
   let pic= document.getElementById("pic");
@@ -666,7 +667,8 @@
         }
       }
 
-  function f1(){
+  function f1(event){
+    event.preventDefault()
     let phoneI= document.getElementById("phoneI").value;
     let passI= document.getElementById("passI").value;
     let phone2I= document.getElementById("phone2I").value;
@@ -678,22 +680,32 @@
     })
     .then(type=> type.json())
     .then(data=>{
-      if(data.name=="Null"){
-        phoneC.style.color="red";
-        phoneC.type="text";
-        phoneC.value+=" Is Not Found";
+      console.log(data)
+      if(data.info1.name=="Null"){
+        phone1C.style.color="red";
+        phone1C.type="text";
+        phone1C.value+=" Is Not Found";
   
         setTimeout(()=>{
-          phoneC.style.color="blue";
-          phoneC.type="number";
+          phone1C.style.color="blue";
+          phone1C.type="number";
         }, 4000);
-      } else {
+      } else if(data.info2.name=="Null"){
+        phone2C.style.color="red";
+        phone2C.type="text";
+        phone2C.value+=" Is Not Found";
+  
+        setTimeout(()=>{
+          phone2C.style.color="blue";
+          phone2C.type="number";
+        }, 4000);
+      } else{
         msg.style.display="block";
         msgT.innerHTML=`Welcome Back ${data.info1.name}!`;
         setTimeout(()=>{
           loginPage.style.display="none";
           chatPage.style.display="block";
-        }, 80);
+        }, 4000);
       }
   
       //Chat Page Inside Data
