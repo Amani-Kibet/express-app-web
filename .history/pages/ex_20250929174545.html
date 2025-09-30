@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Menu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+
+    .menu-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .menu-container h1 {
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .menu-btn {
+      display: block;
+      width: 100%;
+      margin: 0.7rem 0;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 0.8rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      color: #fff;
+    }
+
+    .signin {
+      background: #4facfe;
+    }
+
+    .signin:hover {
+      background: #3c92f6;
+      transform: scale(1.05);
+    }
+
+    .login {
+      background: #43e97b;
+    }
+
+    .login:hover {
+      background: #34d16b;
+      transform: scale(1.05);
+    }
+
+    .info {
+      background: #ff758c;
+    }
+
+    .info:hover {
+      background: #ff5a75;
+      transform: scale(1.05);
+    }
+
+    .policies {
+      background: #f9c80e;
+      color: #333;
+    }
+
+    .policies:hover {
+      background: #e6b80b;
+      transform: scale(1.05);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile-first responsiveness */
+    @media (max-width: 480px) {
+      .menu-container h1 {
+        font-size: 1.5rem;
+      }
+      .menu-btn {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-container">
+    <h1>Main Menu</h1>
+    <button class="menu-btn signin">Sign In</button>
+    <button class="menu-btn login">Log In</button>
+    <button class="menu-btn info">Personal Information</button>
+    <button class="menu-btn policies">Private Policies</button>
+  </div>
+
+  <script>
+    // Example button actions
+    document.querySelector('.signin').onclick = () => alert("Sign In clicked!");
+    document.querySelector('.login').onclick = () => alert("Log In clicked!");
+    document.querySelector('.info').onclick = () => alert("Personal Information clicked!");
+    document.querySelector('.policies').onclick = () => alert("Private Policies clicked!");
+  </script>
+</body>
+</html>

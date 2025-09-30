@@ -26,13 +26,35 @@ let storage1= multer.diskStorage({
     cb(null, `${new Date().getMinutes()}-${file.originalname}`)
   }
 })
+
 filex= multer({storage: storage1})
-app.post("/path1", filex.single("image"), (req, res)=>{
+app.post("/sign/path1", filex.single("image"), (req, res)=>{
   let json= JSON.parse(req.body.json)
   console.log(req.file.path);
   let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`})
   user.save()
   res.json({feedback: `${json.name}  Received and Saved✅`})
+})
+
+app.post("/chat/path1", async (req, res)=>{
+  let arr1= await contacts.find({phone: req.body.phone, password: req.body.pass});
+  let arra;
+  if(arr1.length==0){arr1=[{name: "Null"}]} else{arra=arr1}
+  let arr2= await contacts.find({phone: req.body.phone2});
+  console.log(arr2)
+  res.json({info1: arr1[0], info2: arr2[0]})
+})
+
+app.post("/chat/path2", async (req, res)=>{
+  await contacts.updateOne(
+    {phone: req.body.phone2},
+    {$set: {message: `${req.body.input}`}}
+  )
+})
+
+app.post("/chat/path3", async (req, res)=>{
+  let arr3= await contacts.find({phone: req.body.phone1});
+  res.json({msg: arr3[0].message})
 })
 
 app.post("/path3", async (req, res)=>{
@@ -41,27 +63,10 @@ app.post("/path3", async (req, res)=>{
   console.log(arr)
   })
 
-  app.post("/path4", async (req, res)=>{
-    let arr1= await contacts.find({phone: req.body.phone, password: req.body.pass});
-    let arra;
-    if(arr1.length==0){arr1=[{name: "Null"}]} else{arra=arr1}
-    let arr2= await contacts.find({phone: req.body.phone2});
-    console.log(arr2)
-    res.json({info1: arr1[0], info2: arr2[0]})
-  })
-
-  app.post("/path5", async (req, res)=>{
-    await contacts.updateOne(
-      {phone: req.body.phone2},
-      {$set: {message: `${req.body.input}`}}
-    )
-    let arr3= await contacts.find({phone: req.body.phone1});
-    res.json({reply: arr3[0].message})
-  })
-
-  app.get("/", (req, res)=>{
-    res.send("Is it working yoh...")
-  })
+  app.get("/path/online", async (req, res) => {
+    let arr4= await contacts.find();
+    res.json({everyone: arr4});
+  });
  
   console.log("updated")
   app.listen(process.env.PORT || 3000, ()=>console.log("Backend Started"))
