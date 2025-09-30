@@ -21,44 +21,47 @@
   }
   
   body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between; /* top-bar, board, bottom-bar */
-      align-items: center;
-      background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      color: #fff;
-      text-align: center;
-      padding: 0 2%;
-  }
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color: #fff;
+    text-align: center;
+    padding: 0;
+}
   
   /* ================= Top & Bottom Bars ================= */
   .top-bar {
-      width: 100%;
-      height: 70px;
-      background: #2575fc;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-  }
-  
-  .bottom-bar {
-      width: 100vw; /* fill entire device width */
-      height: 55px;
-      background: #2575fc;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      font-size: 1rem;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-  }
+    width: 100%;
+    flex: 0 0 60px; /* fixed height but flexible */
+    background: #2575fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    color: #fff;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0; 
+    left: 0; 
+    width: 100%;          
+    height: 55px;
+    background: #2575fc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
   
   .bottom-bar a {
       color: white;
@@ -74,22 +77,21 @@
   
   /* ================= Board ================= */
   #board {
-      width: 100%;
-      max-width: 600px;
-      height: 90vh;
-      flex: 0 0 auto;  
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-      padding: 2rem 1rem;
-      margin: 0;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      background: rgba(13, 221, 141, 0.95);
-      border-radius: 12px;
-      overflow-y: auto;
-      animation: fadein 1s ease-in-out;
-  }
+    flex: 1;  /* take all remaining vertical space */
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1.5rem 1rem;
+    margin: 0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    background: rgba(13, 221, 141, 0.95);
+    border-radius: 12px;
+    overflow-y: auto;
+    animation: fadein 1s ease-in-out;
+}
   
   /* Heading */
   #board h1 {
@@ -209,7 +211,7 @@
 <body>
     <div class="top-bar">Unity</div>
 <div id="board">
-<h1>Welcome To Unity Global Connect (Hosted by Amani K.)</h1>
+<h1 style="font-size: 34px">Welcome To Unity Global Connect (Hosted by Amani K.)</h1>
 <button id="openLogin" class="btn">Start Chat</button>
 <button id="openSignup" class="btn">Sign Up</button>
 <button id="openPolicy" class="btn">Private Policies</button>
@@ -221,7 +223,7 @@
     <span class="close">&times;</span>
     <h2 style="font-size:2rem; color:#00c6ff; text-align:center; margin-bottom:20px;">Private Policies</h2>
 <div style="font-family:'Segoe UI', sans-serif; color:#fff; background:#111; padding:25px; border-radius:16px; line-height:1.8;">
-  <h2 style="color:#00c6ff; text-align:center; margin-bottom:20px;">Unity Privacy Policy</h2>
+  <h2 style="color:#00c6ff; text-align:center; margin-bottom:20px;">Unity Privacy Policy(scroll down for more...)</h2>
   
   <p style="font-size: 1rem; margin-bottom:15px;">
     Unity connects to anyone globally <b>FOR FREE</b>. <b>Note:</b> Only registered users can use Unity Connect; share the link to your friends to continue chatting for free. We respect your privacy with <strong>end-to-end encryption</strong> and <strong>self-encryption</strong>.

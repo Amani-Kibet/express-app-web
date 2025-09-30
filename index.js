@@ -155,7 +155,7 @@ body {
 <div id="overlay">
     <div id="popup">
         <button id="closeBtn">&times;</button>
-        <h2>Looking for Unity Connect?</h2>
+        <h2>Looking for Unity?</h2>
         <button id="goBtn">Click Here</button>
     </div>
 </div>

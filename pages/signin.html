@@ -244,7 +244,8 @@
     </div>
     <button id="submit" type="submit" onclick="f1(event)">Submit</button>
     <a class="links" id="link1" href="/pages/chat.html">Have an account?</a>
-
+  </form>
+  
     <div id="msg">
       <div id="progC">
         <div id="prog1" class="prog">🔴</div>
@@ -253,7 +254,7 @@
       <p id="loginT">Please wait...</p>
       <h3 id="msgT">No text returned</h3>
     </div>
-  </form>
+ 
 
   <div class="bottom-bar">
     <a href="#">🏠 Home</a>
@@ -266,7 +267,7 @@
   let msgT= document.getElementById("msgT");
   let msg= document.getElementById("msg");
   let home= document.getElementById("home")
-  
+
   home.addEventListener("click", ()=>{
       window.location.href="/pages/home.html"
   })
