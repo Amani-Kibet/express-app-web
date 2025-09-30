@@ -24,7 +24,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between; /* top-bar, board, bottom-bar */
+      justify-content: space-between; /* distribute top-bar, board, bottom-bar */
       align-items: center;
       background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
       color: #fff;
@@ -48,7 +48,8 @@
   }
   
   .bottom-bar {
-      width: 100vw; /* fill entire device width */
+      width: 100%;
+      max-width: 95vw;
       height: 55px;
       background: #2575fc;
       color: white;
@@ -76,17 +77,17 @@
   #board {
       width: 100%;
       max-width: 600px;
-      flex: 1 1 auto;
+      flex: 1 1 auto; /* allow board to grow/shrink */
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-around; /* distribute heading & buttons evenly */
       align-items: center;
       padding: 2rem 1rem;
       margin: 0;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
       background: rgba(13, 221, 141, 0.95);
       border-radius: 12px;
-      overflow-y: auto;
+      overflow-y: auto; /* scroll if needed */
       animation: fadein 1s ease-in-out;
   }
   
@@ -97,30 +98,27 @@
       animation: fadeInDown 1.2s ease;
   }
   
-  /* Pyramid Buttons */
+  /* Buttons */
   .btn {
+      width: 80%;
+      max-width: 300px;
+      padding: 12px 25px;
+      margin: 10px 0;
       border: none;
       border-radius: 30px;
       background: linear-gradient(45deg,#00c6ff,#0072ff);
       color: white;
       cursor: pointer;
-      margin: 8px 0;
+      font-size: clamp(0.95rem, 3vw, 1.2rem);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      font-weight: bold;
   }
-  
-  /* Pyramid scaling: top smallest, middle bigger, bottom biggest */
-  #openLogin { width: 60%; padding: 10px; font-size: 1rem; }
-  #openSignup { width: 70%; padding: 12px; font-size: 1.1rem; }
-  #openPolicy { width: 80%; padding: 14px; font-size: 1.2rem; }
-  #openOnline { width: 90%; padding: 16px; font-size: 1.3rem; }
   
   .btn:hover {
       transform: scale(1.08);
       box-shadow: 0 0 15px rgba(0,114,255,0.6);
   }
   
-  /* ================= Modals ================= */
+  /* Modals */
   .modal {
       display: none;
       position: fixed;
@@ -179,11 +177,13 @@
       to { opacity: 1; transform: translateY(0); }
   }
   
-  /* ================= Responsive ================= */
+  /* ================= Responsive for smaller screens ================= */
   @media (max-width: 768px) {
-      #board { padding: 1.5rem 1rem; }
+      #board {
+          padding: 1.5rem 1rem;
+      }
       #board h1 { font-size: clamp(1.4rem, 5vw, 2.2rem); }
-      .btn { margin: 6px 0; }
+      .btn { font-size: clamp(0.9rem, 3vw, 1.1rem); }
   }
   
   @media (max-width: 480px) {
@@ -191,59 +191,51 @@
           padding: 1rem 0.5rem;
           justify-content: space-around;
       }
-      #board h1 { font-size: clamp(1.2rem, 4.5vw, 2rem); }
-      #openLogin { width: 65%; padding: 10px; font-size: 1rem; }
-      #openSignup { width: 75%; padding: 12px; font-size: 1.1rem; }
-      #openPolicy { width: 85%; padding: 14px; font-size: 1.2rem; }
-      #openOnline { width: 95%; padding: 16px; font-size: 1.3rem; }
-      .top-bar, .bottom-bar { font-size: 0.9rem; height: 45px; padding: 0 5px; }
+      #board h1 {
+          font-size: clamp(1.2rem, 4.5vw, 2rem);
+      }
+      .btn {
+          width: 90%;
+          font-size: clamp(0.9rem, 3vw, 1.05rem);
+          padding: 10px 20px;
+      }
+      .top-bar, .bottom-bar {
+          font-size: 0.9rem;
+          height: 45px;
+          padding: 0 5px;
+      }
   }
-  
   
 </style>
 </head>
 <body>
     <div class="top-bar">Unity</div>
 <div id="board">
-<h1>Welcome To Unity Global Connect (Hosted by Amani K.)</h1>
+<h1>Welcome To Unity Global Connect</h1>
 <button id="openLogin" class="btn">Start Chat</button>
 <button id="openSignup" class="btn">Sign Up</button>
 <button id="openPolicy" class="btn">Private Policies</button>
-<button id="openOnline" class="btn">See Who's Connected</button>
+<button id="openOnline" class="btn">See Who's Online</button>
 <h5 style="margin-top: 22%"><i>Please read the private policies before signing in<i><h5>
 <!-- Private Policies Modal -->
 <div id="PrivateInfo" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2 style="font-size:2rem; color:#00c6ff; text-align:center; margin-bottom:20px;">Private Policies</h2>
-<div style="font-family:'Segoe UI', sans-serif; color:#fff; background:#111; padding:25px; border-radius:16px; line-height:1.8;">
-  <h1 style="color:#00c6ff; text-align:center; font-size:2.2rem; margin-bottom:20px;">Unity Privacy Policy</h1>
-  
-  <p style="font-size:1.2rem; margin-bottom:15px;">
-    Unity connects to anyone globally <b>FOR FREE</b>. <b>Note:</b> Only registered users can use Unity Connect; share the link to your friends to continue chatting for free. We respect your privacy with <strong>end-to-end encryption</strong> and <strong>self-encryption</strong>.
-  </p>
-  
-  <p style="font-size:1.2rem; margin-bottom:15px;">The System...</p>
-  
-  <ol style="padding-left:25px; font-size:1.15rem; margin-bottom:15px;">
-    <li style="margin-bottom:10px;">Collect minimal account info and device metadata.</li>
-    <li style="margin-bottom:10px;">Use data only to deliver messages and improve service.</li>
-    <li style="margin-bottom:10px;">Never sell personal data; share only with service providers if needed.</li>
-    <li style="margin-bottom:10px;">You control your E2EE, profile, and account deletion.</li>
-  </ol>
-  
-  <hr style="border-color:#333; margin:20px 0;">
-  
-  <p style="font-size:1.1rem; margin-bottom:20px;">
-    Please share the link with your friends to increase Unity global connection: 
-    <a href="https://express-app-web.onrender.com/pages/sighin.html" style="color:#00c6ff; text-decoration:underline;">https://express-app-web.onrender.com/pages/sighin.html</a>
-  </p>
-  
-  <p style="text-align:center; font-size:1rem; color:#aaa;">
-    Contact: <strong>amanikbt1@gmail.com</strong>
-  </p>
-</div>
-
+    <h2>Private Policies</h2>
+    <div style="font-family:'Segoe UI', sans-serif; color:#fff; background:#111; padding:20px; border-radius:12px;">
+      <h1 style="color:#00c6ff;text-align:center;">Unity Privacy Policy</h1>
+      <p>Unity connects to anyone globally <b>FOR FREE</b>.<b> Note: </b> Only registered users can use Unity Connect; share the link to your friends to continue chatting for free. We respect your privacy with <strong>end-to-end encryption</strong> and <strong>self-encryption</strong>.</p>
+      <p>The System...</p>
+      <ol style="padding-left:20px; line-height:1.5;">
+        <li>Collect minimal account info and device metadata.</li>
+        <li>Use data only to deliver messages and improve service.</li>
+        <li>Never sell personal data; share only with service providers if needed.</li>
+        <li>You control your E2EE, profile, and account deletion.</li>
+        <hr>
+        <p>Please share the link to your friends to increase Unity global connection: https://express-app-web.onrender.com/pages/sighin.html
+        </p>
+      </ol>
+      <p style="text-align:center; font-size:0.9rem; color:#aaa;">Contact: <strong>amanikbt1@gmail.com</strong></p>
     </div>
   </div>
 </div>

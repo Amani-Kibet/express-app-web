@@ -35,8 +35,9 @@
       background: #2575fc;
       color: white;
       display: flex;
-      gap: 30%;
+      gap: 40px;
       align-items: center;
+      justify-content: center;
       font-weight: bold;
       font-size: 1.2rem;
       border-top-left-radius: 12px;
@@ -262,14 +263,10 @@
   </div>
 </body>
 <script>
-  let bt1= document.getElementById("submit");
-  let msgT= document.getElementById("msgT");
-  let msg= document.getElementById("msg");
-  let home= document.getElementById("home")
-  
-  home.addEventListener("click", ()=>{
-      window.location.href="/pages/home.html"
-  })
+  let bt1= document.getElementById("submit")
+  let msgT= document.getElementById("msgT")
+  let msg= document.getElementById("msg")
+
 function f1(event){
   event.preventDefault();
   let phoneI= document.getElementById("phoneI").value;

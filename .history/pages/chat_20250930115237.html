@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Chat</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="loginPage">
+    <div class="top-bar-log">
+      <div class="settings-btn" id="home" style="font-size: 2.4rem">⬅️</div>
+      <p> Unity </p>
+    </div>
+  <div id="board">
+    <h2>Login</h2>
+    <input required type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
+    <input required type="password" class="inputs" id="passI" placeholder="Enter Password">
+    <input required type="number" class="inputs" id="phone2I" placeholder="Enter Phone number to chat with...">
+    <button id="submit" onclick="f1()">Submit</button>
+    <a id="link1" class="links" href="/pages/personalInfo.html">Forgot Password?</a>
+    <a class="links" id="link2" href="/pages/signIn.html">Sign Up</a>
+
+    <div id="msg">
+      <div id="progC">
+        <div id="prog1" class="prog">🔴</div>
+        <div id="prog2" class="prog">🟢</div>
+      </div>
+      <p id="loginT">Logging in...</p>
+      <h3 id="msgT">No text returned</h3>
+    </div>
+  </div>
+
+  <!-- Bottom App Bar -->
+  <div class="bottom-bar-log">
+    <a href="#">🏠 Home</a>
+    <a href="#">🔍 Search</a>
+    <a href="#">⚙ Settings</a>
+  </div>
+</div>
+
+
+  <!-- Chat Page -->
+   <span id="chatPage">
+  <div class="top-bar">
+    <div style="display: flex; align-items: center;">
+      <div class="settings-btn" id="settings">☰</div>
+      <div class="user-info">
+        <h2 id="nameinfo"></h2>
+        <p id="phoneinfo"></p>
+      </div>
+    </div>
+    <div id="pic"></div>
+    <div class="dropdown" id="dropdown">
+      <button onclick="toggleDarkMode()">🌙 Dark Theme</button>
+      <button onclick="openModal()">⚙️ Settings</button>
+      <button id="connected">🛜 See who is connected</button>
+      <button onclick="exit()">❌ Exit chat</button>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chat">
+  </div>
+
+  <!-- Chat Input -->
+  <div class="chat-input">
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="sendbtn">➤</button>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Settings</h3>
+      <label>🎨 Pick Background Color</label><br>
+      <input type="color" onchange="changeBackgroundColor(this.value)"><br>
+      <label>🖼 Upload Background</label><br>
+      <input type="file" accept="image/*" onchange="uploadBackground(event)"><br>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Profile Picture Zoom Modal -->
+  <div class="pic-modal" id="picModal" onclick="closePicModal()">
+  </div>
+</span>
+
+<div id="OnlineInfo" id="modal2" class="modal2">
+  <div class="modal-content2">
+    <span id="closemodal" class="close">&times;</span>
+    <h2>Who's Online</h2>
+    <ol id="onlineList"></ol>
+  </div>
+</div>
+  <script>
+    let home= document.getElementById("home")
+  home.addEventListener("click", ()=>{
+      window.location.href="/pages/home.html"
+  })
+    //Login Page
+  let bt1= document.getElementById("submit")
+  let msgT= document.getElementById("msgT")
+  let msg= document.getElementById("msg")
+  let phoneC= document.getElementById("phoneI");
+  let passC= document.getElementById("passI")
+  let loginPage= document.getElementById("loginPage");
+  let pic= document.getElementById("pic");
+  let nameinfo= document.getElementById("nameinfo");
+  let phoneinfo= document.getElementById("phoneinfo");
+  let sendbt= document.getElementById("sendbtn");
+  let settings= document.getElementById("settings");
+  let ol= document.getElementById("onlineList");
+  let closemodal = document.getElementById("closemodal");
+  let modal2= document.querySelector(".modal2");
+  let connected= document.getElementById("connected");
+  let dropdown = document.getElementById("dropdown");
+  let messageBox= document.getElementById("message");
+
+  closemodal.addEventListener("click", ()=>{
+    modal2.style.display="none"
+  })
+  function exit(){
+    window.location.href="/pages/home.html"
+  }
+  settings.addEventListener("click", ()=>{
+    setTimeout(()=>{
+      dropdown.style.display="none"
+    }, 6000);
+     dropdown.style.display = dropdown.style.display==="flex"?"none":"flex"; })
+      function toggleDarkMode() { document.body.classList.toggle("dark"); }
+      function openModal() { document.getElementById("modal").style.display="flex"; document.getElementById("dropdown").style.display="none"; }
+      function closeModal() { document.getElementById("modal").style.display="none"; }
+      function changeBackgroundColor(color) { document.body.style.background=color; }
+      function uploadBackground(event) {
+        const file = event.target.files[0];
+        if(file){
+          const reader = new FileReader();
+          reader.onload = function(e){
+            document.body.style.background = `url(${e.target.result}) no-repeat center/cover`;
+            document.body.style.backgroundSize = "cover";
+          }
+          reader.readAsDataURL(file);
+        }
+      }
+
+  function f1(){
+    let phoneI= document.getElementById("phoneI").value;
+    let passI= document.getElementById("passI").value;
+    let phone2I= document.getElementById("phone2I").value;
+  
+    fetch("/chat/path1",{
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, phone2: `${phone2I}`})
+    })
+    .then(type=> type.json())
+    .then(data=>{
+      if(data.name=="Null"){
+        phoneC.style.color="red";
+        phoneC.type="text";
+        phoneC.value+=" Is Not Found";
+  
+        setTimeout(()=>{
+          phoneC.style.color="blue";
+          phoneC.type="number";
+        }, 4000);
+      } else {
+        msg.style.display="block";
+        msgT.innerHTML=`Welcome Back ${data.info1.name}!`;
+        setTimeout(()=>{
+          loginPage.style.display="none";
+          chatPage.style.display="block";
+        }, 80);
+      }
+  
+      //Chat Page Inside Data
+      pic.style.background= `url(/pictures/${data.info2.piclink})`;
+      nameinfo.innerHTML= `${data.info2.name}`;
+      phoneinfo.innerHTML= `${data.info2.phone}`;
+      pic.style.backgroundSize= "cover";
+  
+      // Typing effect for bot
+      function typeMessage(text, container) {
+        container.style.whiteSpace = "pre-wrap";
+        let i = 0;
+        const interval = setInterval(() => {
+          container.textContent += text.charAt(i);
+          i++;
+          if (i === text.length) clearInterval(interval);
+        }, 50);
+      }
+      
+      
+      function send(){
+        const input = document.getElementById("message");
+        const text = input.value;
+        if (text === "") return;
+  
+        const chat = document.getElementById("chat");
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble chat-right";
+        bubble.textContent = text;            // use textContent, not innerText
+        bubble.style.whiteSpace = "pre-wrap";
+        
+        chat.appendChild(bubble);
+        chat.scrollTop = chat.scrollHeight;
+        input.value = "";
+  
+        fetch("/chat/path2", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({
+            phone1: data.info1.phone,
+            input: text,
+            phone2: data.info2.phone
+          })
+        })
+      };
+      sendbt.addEventListener("click", send);
+      messageBox.addEventListener("keydown", function(event) {
+        if(event.key === "Enter") {
+            event.preventDefault(); // prevent line break if textarea
+            send();
+        }
+    });
+      // Profile pic zoom modal
+      const picModal = document.getElementById("picModal");
+      const modalImg = document.getElementById("modalImg");
+  
+      pic.addEventListener("click", ()=>{
+        picModal.style.display = "flex";
+      });
+  
+      function closePicModal(){
+        const img = document.querySelector("#picModal img");
+        img.style.animation = "zoomOut 0.3s forwards";
+        setTimeout(()=>{
+          picModal.style.display = "none";
+          img.style.animation = "zoomIn 0.4s forwards";
+        }, 300);
+      }
+
+      let lastMessage = ""; // track last message
+
+      setInterval(() => {
+        fetch("/chat/path3", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone1: data.info1.phone })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.msg !== lastMessage) { // only act if message changed
+            lastMessage = data.msg; // update lastMessage
+      
+            const typing = document.createElement("div");
+            typing.className = "typing-indicator";
+            chat.appendChild(typing);
+            chat.scrollTop = chat.scrollHeight;
+      
+            setTimeout(() => {
+              typing.remove();
+      
+              const reply = document.createElement("div");
+              reply.className = "chat-bubble chat-left";
+              reply.style.whiteSpace = "pre-wrap";
+              chat.appendChild(reply);
+      
+              typeMessage(data.msg, reply);
+              chat.scrollTop = chat.scrollHeight;
+            }, 1500);
+          }
+        });
+      }, 6000);
+      
+    });
+  }
+
+  connected.addEventListener("click", ()=>{
+  fetch("/path/online")
+  .then(type=> type.json())
+  .then(data=>{
+    data.everyone.forEach((user, index)=>{
+        const li = document.createElement("li");
+        li.textContent = `${user.name}- ${user.phone}`;
+        ol.appendChild(li);
+        modal2.style.display="block"
+    })
+});
+  })
+  </script>
+</body>
+</html>

@@ -361,72 +361,34 @@
 
     /* Settings modal */
     .modal {
-      display: none; /* hidden by default */
+      display: none;
       position: fixed;
-      z-index: 9999;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(5px);
+      background: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
-      transition: opacity 0.3s ease;
+      z-index: 20;
     }
-    
-    .modal-content {
-      background: #1a1a1a;
-      color: #fff;
-      padding: 25px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      text-align: center;
-      animation: slideIn 0.3s ease;
-      font-family: "Segoe UI", sans-serif;
-    }
-    
 
-    .modal-content h3 {
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      color: #00c6ff;
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
-    
-    .modal-content label {
-      display: block;
-      margin: 15px 0 8px;
-      font-size: 1.1rem;
-    }
-    
-    .modal-content input[type="color"],
-    .modal-content input[type="file"] {
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      background: #222;
-      color: #fff;
-      cursor: pointer;
-      width: 100%;
-    }
-    
+
     .close-btn {
-      background: linear-gradient(45deg, #00c6ff, #0072ff);
-      border: none;
+      background: #667eea;
       color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
       cursor: pointer;
       margin-top: 10px;
-      transition: 0.3s ease;
-      width: 100%;
-    }
-    
-    .close-btn:hover {
-      background: linear-gradient(45deg, #0072ff, #00c6ff);
-      transform: scale(1.05);
     }
 
     /* Neon typing indicator */
@@ -549,8 +511,6 @@
       <button onclick="toggleDarkMode()">🌙 Dark Theme</button>
       <button onclick="openModal()">⚙️ Settings</button>
       <button id="connected">🛜 See who is connected</button>
-      <button id="profileInfoBtn">👤 Profile Info</button>
-
       <button onclick="exit()">❌ Exit chat</button>
     </div>
   </div>
@@ -611,7 +571,6 @@
   let modal2= document.querySelector(".modal2");
   let connected= document.getElementById("connected");
   let dropdown = document.getElementById("dropdown");
-  let messageBox= document.getElementById("message");
 
   closemodal.addEventListener("click", ()=>{
     modal2.style.display="none"
@@ -619,10 +578,6 @@
   function exit(){
     window.location.href="/pages/home.html"
   }
-  document.getElementById("profileInfoBtn").addEventListener("click", ()=>{
-    window.location.href = "/pages/personalInfo.html";
-  });
-  
   settings.addEventListener("click", ()=>{
     setTimeout(()=>{
       dropdown.style.display="none"
@@ -717,13 +672,8 @@
           })
         })
       };
-      sendbt.addEventListener("click", send);
-      messageBox.addEventListener("keydown", function(event) {
-        if(event.key === "Enter") {
-            event.preventDefault(); // prevent line break if textarea
-            send();
-        }
-    });
+      sendbt.addEventListener("click", )
+      sendbt.addEventListener("click", )
       // Profile pic zoom modal
       const picModal = document.getElementById("picModal");
       const modalImg = document.getElementById("modalImg");
