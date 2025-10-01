@@ -369,7 +369,6 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(5px);
       justify-content: center;
       align-items: center;
       transition: opacity 0.3s ease;
@@ -516,12 +515,106 @@
     @keyframes fadeIn2 { from{opacity:0;} to{opacity:1;} }
     @keyframes slideUp { from{transform:translateY(40px); opacity:0;} to{transform:translateY(0); opacity:1;} }
     @keyframes slideLeft { from{transform:translateX(40px); opacity:0;} to{transform:translateX(0); opacity:1;} }
-    @keyframes fadeInDown { from{opacity:0; transform:translateY(-30px);} to{opacity:1; transform:translateY(0);} }
+    @keyframes fadeInDown { from{opacity:0; transform:translateY(-30px);}
+    to{opacity:1; transform:translateY(0);} }
+
+    /* --- Top Bar Contacts --- */
+    #contactsPage{
+      width:100%;
+      height:100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display:flex;
+      flex-direction:column;
+  
+    }
+  .top-bar-cont {
+    width:100%; height:60px; background: rgba(58,126,245,0.95);
+    display:flex; align-items:center; justify-content:space-between; padding:0 15px;
+    color:#fff; font-weight:bold; box-shadow: 0 3px 10px rgba(0,0,0,0.2); position:relative;
+  }
+  .top-bar-cont .title { font-size:1.3rem; letter-spacing:0.5px; }
+  .top-bar-cont .menu-btn { font-size:1.5rem; cursor:pointer; transition: transform 0.3s; }
+  .top-bar-cont .menu-btn:hover { transform: rotate(90deg); }
+
+  /* --- Search Bar --- */
+  .search-bar { padding:10px 15px; }
+  .search-bar input {
+    width:100%; padding:12px 18px; border-radius:25px; border:none; outline:none;
+    font-size:1rem; box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:0.2s;
+  }
+  .search-bar input:focus { box-shadow:0 0 20px rgba(58,126,245,0.5); }
+
+  /* --- Users List --- */
+  #userList {
+    flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  min-height: 72%; 
+  background: rgb(163, 223, 238);
+  
+  }
+  .user {
+    display:flex;
+    align-items:center;
+    padding:12px 15px;
+    margin-bottom:10px;
+    background: rgba(255,255,255,0.85); border-radius:12px;
+    cursor:pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  }
+  .user:hover { transform: translateX(5px) scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+  .user-pic {
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background-size:cover; background-position:center;
+    margin-right:15px;
+    border:2px solid #3a7ef5;
+  }
+  .user-info h2 { font-size:1.1rem; color:#333; }
+  .user-info p { font-size:0.9rem; color:#666; }
+
+  /* --- Bottom Bar --- */
+  .bottom-bar-cont {
+    width:100%; height:55px; background: rgba(58,126,245,0.95); display:flex;
+    justify-content:space-around; align-items:center; color:#fff; font-weight:bold;
+  }
+  .bottom-bar-cont a { color:#fff; text-decoration:none; font-size:1rem; transition:0.2s; }
+  .bottom-bar-cont a:hover { color:#ffea00; }
+
+  /* --- Drawer --- */
+  .drawer {
+    position:fixed; top:0; left:-280px; width:280px; height:100%;
+    background:#fff; box-shadow:3px 0 20px rgba(0,0,0,0.3); z-index:1000;
+    display:flex; flex-direction:column; padding:20px; border-radius:0 15px 15px 0;
+    transition: left 0.3s ease, box-shadow 0.3s;
+  }
+  .drawer.open { left:0; box-shadow:5px 0 30px rgba(0,0,0,0.4); }
+  .drawer h2 { color:#3a7ef5; margin-bottom:20px; letter-spacing:1px; }
+  .drawer button {
+    padding:12px 15px; margin:5px 0; border-radius:8px; border:none;
+    background: #3a7ef5; color:#fff; cursor:pointer; font-size:1rem; transition:0.2s;
+  }
+  .drawer button:hover { background:#2575fc; transform: scale(1.05); }
+
+  /* Scrollbar */
+  #userList::-webkit-scrollbar { width:6px; }
+  #userList::-webkit-scrollbar-thumb { background:#3a7ef5; border-radius:3px; }
+  #userList::-webkit-scrollbar-track { background:transparent; }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .user-pic { width:45px; height:45px; }
+    .user-info h2 { font-size:1rem; }
+    .user-info p { font-size:0.8rem; }
+    .top-bar .title { font-size:1.1rem; }
+  }
   </style>
 </head>
 <body>
+
   <!-- Login Page -->
-  <div id="loginPage">
+  <div id="loginPage" style="display: block">
     <div class="top-bar-log">
       <div class="settings-btn" id="home" style="font-size: 2.4rem">⬅️</div>
       <p> Unity </p>
@@ -531,8 +624,11 @@
     <h2>Login</h2>
     <input required type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
     <input required type="password" class="inputs" id="passI" placeholder="Enter Password">
-    <input required type="number" class="inputs" id="phone2I" placeholder="Enter Phone number to chat with...">
-    <button id="submit" onclick="f1(event)">Submit</button>
+    <br>
+    <div>
+    <input type="checkbox"><b> Notify people I'm Online</b>
+    </div>
+    <button id="submit">Submit</button>
     <a id="link1" class="links" href="/pages/personalInfo.html">Forgot Password?</a>
     <a class="links" id="link2" href="/pages/signIn.html">Sign Up</a>
     </form>
@@ -555,9 +651,38 @@
   </div>
 </div>
 
+<!--Contacts Page-->
+<div id="contactsPage" style="display: none">
+<div class="top-bar-cont">
+  <div class="menu-btn" id="menuBtn">☰</div>
+  <div class="title" id="contTitle">Chats</div>
+  <div class="settings-btn">⚙️</div>
+</div>
 
-  <!-- Chat Page -->
-   <span id="chatPage">
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search contacts...">
+</div>
+
+<div id="userList"></div>
+
+<div class="bottom-bar-cont">
+  <a href="#">🏠 Home</a>
+  <a href="#">🔍 Search</a>
+  <a href="#">💬 Chats</a>
+  <a href="#">⚙ Settings</a>
+</div>
+
+<div class="drawer" id="drawer">
+  <h2>Settings</h2>
+  <button>Profile</button>
+  <button>Account</button>
+  <button>Privacy</button>
+  <button>Logout</button>
+</div>
+</div>
+
+<!-- Chat Page -->
+   <span id="chatPage" style="display: none">
   <div class="top-bar">
     <div style="display: flex; align-items: center;">
       <div class="settings-btn" id="settings">☰</div>
@@ -577,11 +702,8 @@
     </div>
   </div>
 
-  <!-- Chat Container -->
   <div class="chat-container" id="chat">
   </div>
-
-  <!-- Chat Input -->
   <div class="chat-input">
     <input type="text" id="message" placeholder="Type a message..." />
     <button id="sendbtn">➤</button>
@@ -611,17 +733,18 @@
     <ol id="onlineList"></ol>
   </div>
 </div>
+
   <script>
     let home= document.getElementById("home")
   home.addEventListener("click", ()=>{
       window.location.href="/pages/home.html"
   })
+
     //Login Page
   let bt1= document.getElementById("submit")
   let msgT= document.getElementById("msgT")
   let msg= document.getElementById("msg")
   let phone1C= document.getElementById("phoneI");
-  let phone2C= document.getElementById("phone2I");
   let passC= document.getElementById("passI")
   let loginPage= document.getElementById("loginPage");
   let pic= document.getElementById("pic");
@@ -635,12 +758,19 @@
   let connected= document.getElementById("connected");
   let dropdown = document.getElementById("dropdown");
   let messageBox= document.getElementById("message");
+  let contactsPage= document.getElementById("contactsPage");
+  let submit= document.getElementById("submit");
+  let chat = document.getElementById("chat");
+  
 
   closemodal.addEventListener("click", ()=>{
     modal2.style.display="none"
   })
+
   function exit(){
-    window.location.href="/pages/home.html"
+    chatPage.style.display="none";
+    contactsPage.style.display="block";
+    dropdown.style.display="none"
   }
   document.getElementById("profileInfoBtn").addEventListener("click", ()=>{
     window.location.href = "/pages/personalInfo.html";
@@ -667,71 +797,125 @@
         }
       }
 
-  function f1(event){
+  submit.addEventListener("click", (event)=>{
     event.preventDefault()
     let phoneI= document.getElementById("phoneI").value;
     let passI= document.getElementById("passI").value;
-    let phone2I= document.getElementById("phone2I").value;
-  
     fetch("/chat/path1",{
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, phone2: `${phone2I}`})
+      body: JSON.stringify({phone: `${phoneI}`, pass: `${passI}`})
     })
     .then(type=> type.json())
     .then(data=>{
-      console.log(data)
       if(data.info1.name=="Null"){
         phone1C.style.color="red";
         phone1C.type="text";
-        phone1C.value+=" Is Not Found";
+        phone1C.value+=" Is Not Found...";
+        passC.style.color="red";
+        passC.type="text";
+        passC.value=" Check your details again...";
   
         setTimeout(()=>{
           phone1C.style.color="blue";
           phone1C.type="number";
-        }, 4000);
-      } else if(data.info2.name=="Null"){
-        phone2C.style.color="red";
-        phone2C.type="text";
-        phone2C.value+=" Is Not Found";
-  
-        setTimeout(()=>{
-          phone2C.style.color="blue";
-          phone2C.type="number";
+          passC.style.color="blue";
+          passC.type="password";
+          passC.value="";
         }, 4000);
       } else{
         msg.style.display="block";
         msgT.innerHTML=`Welcome Back ${data.info1.name}!`;
         setTimeout(()=>{
           loginPage.style.display="none";
-          chatPage.style.display="block";
-        }, 4000);
-      }
-  
-      //Chat Page Inside Data
-      pic.style.background= `url(/pictures/${data.info2.piclink})`;
-      nameinfo.innerHTML= `${data.info2.name}`;
-      phoneinfo.innerHTML= `${data.info2.phone}`;
+          contactsPage.style.display="block";
+        }, 400);
+    }
+
+    // Contacts Page Script
+    let info1= data.info1;
+    let contTitle=document.getElementById("contTitle");
+    const userList = document.getElementById("userList");
+const searchInput = document.getElementById("searchInput");
+const drawer = document.getElementById("drawer");
+const menuBtn = document.getElementById("menuBtn");
+
+contTitle.innerHTML= `Welcome ${info1.name}!`;
+fetch("/path/online")
+.then(type=> type.json())
+.then(data=>{
+let users= data.everyone;
+// Render users
+function updateUsers(arr){
+  userList.innerHTML = "";
+  arr.forEach(u=>{
+    const div=document.createElement("div");
+    div.classList.add("user");
+    div.innerHTML = `
+  <div class="user-pic" style="background-image: url('/pictures/${u.piclink}');"></div>
+  <div class="user-info">
+    <h2>${u.name}</h2>
+    <p>${u.label}</p>
+  </div>
+`;
+
+     div.addEventListener("click", ()=>{openChat(u)})
+    userList.appendChild(div);
+  });
+}
+updateUsers(users);
+
+// Search filter
+searchInput.addEventListener("keyup",()=>{
+  const filter = searchInput.value.toLowerCase();
+  updateUsers(users.filter(u=>u.name.toLowerCase().includes(filter)));
+});
+});
+
+// Drawer toggle
+menuBtn.addEventListener("click",()=> drawer.classList.toggle("open"));
+
+// Ultra-sensitive swipe gestures
+let startX = 0;
+drawer.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+drawer.addEventListener('touchmove', e => {
+  const delta = e.touches[0].clientX - startX;
+  if(delta > 30) drawer.classList.add("open");
+  else if(delta < -30) drawer.classList.remove("open");
+});
+drawer.addEventListener('touchend', () => drawer.style.left = drawer.classList.contains("open") ? "0px" : "-280px");
+
+// Scroll animation for user list
+userList.addEventListener('scroll', () => {
+  const userDivs = document.querySelectorAll('.user');
+  const listHeight = userList.clientHeight;
+  userDivs.forEach(div => {
+    const rect = div.getBoundingClientRect();
+    const distanceFromTop = rect.top - userList.getBoundingClientRect().top;
+    const distanceFromBottom = listHeight - distanceFromTop;
+    let scale = 1;
+    if(distanceFromTop < 50) scale = 0.85 + (distanceFromTop/50)*0.15;
+    else if(distanceFromBottom < 50) scale = 0.85 + (distanceFromBottom/50)*0.15;
+    div.style.transform = `scale(${scale})`;
+    div.style.opacity = scale;
+  });
+});
+
+function openChat(info){
+  let contactsPage= document.getElementById("contactsPage");
+
+  chatPage.style.display="block";
+  contactsPage.style.display="none"
+  pic.style.background= `url(/pictures/${info.piclink})`;
+      nameinfo.innerHTML= `${info.name}`;
+      phoneinfo.innerHTML= `${info.phone}`;
       pic.style.backgroundSize= "cover";
-  
-      // Typing effect for bot
-      function typeMessage(text, container) {
-        container.style.whiteSpace = "pre-wrap";
-        let i = 0;
-        const interval = setInterval(() => {
-          container.textContent += text.charAt(i);
-          i++;
-          if (i === text.length) clearInterval(interval);
-        }, 50);
-      }
-      
-      
+
       function send(){
         const input = document.getElementById("message");
         const text = input.value;
         if (text === "") return;
-  
-        const chat = document.getElementById("chat");
+
         const bubble = document.createElement("div");
         bubble.className = "chat-bubble chat-right";
         bubble.textContent = text;            // use textContent, not innerText
@@ -745,12 +929,43 @@
           method: "POST",
           headers: {"Content-Type":"application/json"},
           body: JSON.stringify({
-            phone1: data.info1.phone,
+            phone1: info.phone,
             input: text,
-            phone2: data.info2.phone
+            phone2: info.phone
           })
         })
       };
+      let lastMessage = "";
+      setInterval(() => {
+        fetch("/chat/path3", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone1: data.info1.phone })
+        })
+        .then(type => type.json())
+        .then(data => {
+          if (data.msg !== lastMessage) { // only act if message changed
+            lastMessage = data.msg; // update lastMessage
+      
+            const typing = document.createElement("div");
+            typing.className = "typing-indicator";
+            chat.appendChild(typing);
+            chat.scrollTop = chat.scrollHeight;
+      
+            setTimeout(() => {
+              typing.remove();
+      
+              const reply = document.createElement("div");
+              reply.className = "chat-bubble chat-left";
+              reply.style.whiteSpace = "pre-wrap";
+              chat.appendChild(reply);
+      
+              typeMessage(data.msg, reply);
+              chat.scrollTop = chat.scrollHeight;
+            }, 4000);
+          }
+        });
+      }, 600);
       sendbt.addEventListener("click", send);
       messageBox.addEventListener("keydown", function(event) {
         if(event.key === "Enter") {
@@ -774,42 +989,21 @@
           img.style.animation = "zoomIn 0.4s forwards";
         }, 300);
       }
+}
+  })
+})
 
-      let lastMessage = ""; // track last message
-
-      setInterval(() => {
-        fetch("/chat/path3", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone1: data.info1.phone })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.msg !== lastMessage) { // only act if message changed
-            lastMessage = data.msg; // update lastMessage
+//Chat Page
+      function typeMessage(text, container) {
+        container.style.whiteSpace = "pre-wrap";
+        let i = 0;
+        const interval = setInterval(() => {
+          container.textContent += text.charAt(i);
+          i++;
+          if (i === text.length) clearInterval(interval);
+        }, 50);
+      }
       
-            const typing = document.createElement("div");
-            typing.className = "typing-indicator";
-            chat.appendChild(typing);
-            chat.scrollTop = chat.scrollHeight;
-      
-            setTimeout(() => {
-              typing.remove();
-      
-              const reply = document.createElement("div");
-              reply.className = "chat-bubble chat-left";
-              reply.style.whiteSpace = "pre-wrap";
-              chat.appendChild(reply);
-      
-              typeMessage(data.msg, reply);
-              chat.scrollTop = chat.scrollHeight;
-            }, 1500);
-          }
-        });
-      }, 600);
-      
-    });
-  }
 
   connected.addEventListener("click", ()=>{
   fetch("/path/online")

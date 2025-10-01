@@ -12,7 +12,7 @@ mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatab
 .then(()=> console.log("Database Connected Successfully"))
 .catch(err=> console.log("Database Failed: "+ err))
 
-let labels= new mongoose.Schema({name: String, phone: String, password: String, piclink: String, message: String})
+let labels= new mongoose.Schema({name: String, phone: String, password: String, piclink: String, dob: Number, country: String, county: String, label: String, message: String})
 let contacts= mongoose.model("User Contacts", labels)
 
 let storage1= multer.diskStorage({
@@ -27,19 +27,15 @@ let storage1= multer.diskStorage({
 filex= multer({storage: storage1})
 app.post("/sign/path1", filex.single("image"), (req, res)=>{
   let json= JSON.parse(req.body.json)
-  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`})
+  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`, dob: json.dob, country: `${json.country}`, county: `${json.county}`, label: `${json.label}`})
   user.save()
   res.json({feedback: `${json.name}  Received and Saved✅`})
 })
 
 app.post("/chat/path1", async (req, res)=>{
   let arr1= await contacts.find({phone: req.body.phone, password: req.body.pass});
-  let arra;
-  let arrb;
-  if(arr1.length==0){arr1=[{name: "Null"}]} else{arra=arr1}
-  let arr2= await contacts.find({phone: req.body.phone2});
-  if(arr2.length==0){arr2=[{name: "Null"}]} else{arrb=arr2}
-  res.json({info1: arr1[0], info2: arr2[0]})
+  if(arr1.length==0){arr1=[{name: "Null"}]}
+  res.json({info1: arr1[0]})
 })
 
 app.post("/chat/path2", async (req, res)=>{
@@ -63,6 +59,7 @@ app.post("/path3", async (req, res)=>{
     let arr4= await contacts.find();
     res.json({everyone: arr4});
   });
+
  
   app.get("/", (req, res) => {
     res.send(`

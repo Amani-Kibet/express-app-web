@@ -69,7 +69,7 @@
     }
 
     /* Main content */
-    #form {
+    .forms {
       width: 100%;
       max-width: 600px;
       display: flex;
@@ -82,18 +82,28 @@
       background: rgba(13, 221, 141, 0.95);
       animation: fadeIn 1s ease-in-out;
     }
+    #form2 {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 2rem 0;
+      gap: 0.6rem;
+    }
+    
 
     h2 {
       color: red;
-      font-size: clamp(2rem, 6vw, 4rem);
-      margin-bottom: 2rem;
+      font-size: clamp(1rem, 6vw, 4rem);
+      margin-bottom: 1rem;
       text-align: center;
     }
 
     .inputs {
       width: 90%;
       padding: 1rem;
-      margin: 1rem 0;
+      margin: 0.8rem 0;
       border-radius: 10px;
       font-size: clamp(1rem, 3vw, 1.5rem);
       background-color: rgba(186, 247, 245, 1);
@@ -129,7 +139,7 @@
       color: black;
     }
 
-    #submit {
+    .submit {
       background: rgba(216, 202, 13, 1);;
       width: 70%;
       padding: 1rem;
@@ -149,6 +159,8 @@
     }
 
     .links {
+      display: block;
+      text-align: center;
       margin-top: 2rem;
       font-weight: 800;
       font-size: clamp(1rem, 3vw, 1.2rem);
@@ -156,6 +168,7 @@
       text-decoration: none;
       transition: 0.3s;
     }
+    
 
     .links:hover {
       color: yellow;
@@ -233,8 +246,8 @@
     <p> Unity </p>
   </div>
 
-  <form id="form">
-    <h2>Sign In</h2>
+  <form id="form1" class="forms">
+    <h2>Sign In 1/2</h2>
     <input type="number" required class="inputs" id="phoneI" placeholder=" Enter Phone Number">
     <input type="password" required class="inputs" id="passI" placeholder=" Enter Password">
     <input type="text" required class="inputs" id="nameI" placeholder=" Enter User Name">
@@ -242,10 +255,19 @@
       <i id="picT">Profile Picture</i>
       <input id="picI" required type="file" name="image">
     </div>
-    <button id="submit" type="submit" onclick="f1(event)">Submit</button>
-    <a class="links" id="link1" href="/pages/chat.html">Have an account?</a>
+    <button id="next" class="submit" type="submit">Next</button>
+    <a class="links" href="/pages/chat.html">Have an account?</a>
   </form>
-  
+
+  <form id="form2" class="forms" style="display: none">
+    <h2>Sign In 2/2</h2>
+    <input type="number" required class="inputs" id="dob" placeholder=" Enter Your Date of Birth...">
+    <input type="text" required class="inputs" id="country" placeholder=" Enter Your Country...">
+    <input type="text" required class="inputs" id="county" placeholder=" Enter Your County...">
+    <input type="text" required class="inputs" id="label" placeholder=" Enter Your Default Message eg. I'm available...">
+    <button class="submit" id="submit" type="submit" onclick="f1(event)">Submit</button>
+    <a class="links" href="/pages/chat.html">Have an account?</a>
+  </form>
     <div id="msg">
       <div id="progC">
         <div id="prog1" class="prog">🔴</div>
@@ -266,21 +288,35 @@
   let bt1= document.getElementById("submit");
   let msgT= document.getElementById("msgT");
   let msg= document.getElementById("msg");
-  let home= document.getElementById("home")
-
+  let home= document.getElementById("home");
+  let next= document.getElementById("next");
+  let form1= document.getElementById("form1");
+  let form2= document.getElementById("form2");
+  
   home.addEventListener("click", ()=>{
       window.location.href="/pages/home.html"
   })
+
+  next.addEventListener("click", (event)=>{
+    event.preventDefault();
+    form1.style.display="none";
+    form2.style.display="flex";
+  });
 function f1(event){
   event.preventDefault();
   let phoneI= document.getElementById("phoneI").value;
   let passI= document.getElementById("passI").value;
   let nameI= document.getElementById("nameI").value;
   let picI= document.getElementById("picI").files[0];
+  let dob= document.getElementById("dob").value;
+  let country= document.getElementById("country").value;
+  let county= document.getElementById("county").value;
+  let label= document.getElementById("label").value;
+
 
   let folder= new FormData()
   folder.append("image", picI)
-  folder.append("json", JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, name: `${nameI}`}))
+  folder.append("json", JSON.stringify({phone: `${phoneI}`, pass: `${passI}`, name: `${nameI}`, dob: dob, country: `${country}`, county: `${county}`, label: `${label}`}))
 
   fetch("/sign/path1", {
     method: "POST",

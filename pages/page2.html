@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacts Area</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    flex-direction: column;
+  }
+  #contactsPage{
+    width:100%;
+    height:100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display:flex;
+    flex-direction:column;
+
+  }
+
+  /* --- Top Bar --- */
+  .top-bar-cont {
+    width:100%; height:60px; background: rgba(58,126,245,0.95);
+    display:flex; align-items:center; justify-content:space-between; padding:0 15px;
+    color:#fff; font-weight:bold; box-shadow: 0 3px 10px rgba(0,0,0,0.2); position:relative;
+  }
+  .top-bar-cont .title { font-size:1.3rem; letter-spacing:0.5px; }
+  .top-bar-cont .menu-btn { font-size:1.5rem; cursor:pointer; transition: transform 0.3s; }
+  .top-bar-cont .menu-btn:hover { transform: rotate(90deg); }
+
+  /* --- Search Bar --- */
+  .search-bar { padding:10px 15px; }
+  .search-bar input {
+    width:100%; padding:12px 18px; border-radius:25px; border:none; outline:none;
+    font-size:1rem; box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:0.2s;
+  }
+  .search-bar input:focus { box-shadow:0 0 20px rgba(58,126,245,0.5); }
+
+  /* --- Users List --- */
+  #userList { flex:1; overflow-y:auto; padding:10px; }
+  .user {
+    display:flex; align-items:center; padding:12px 15px; margin-bottom:10px;
+    background: rgba(255,255,255,0.85); border-radius:12px; cursor:pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  }
+  .user:hover { transform: translateX(5px) scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+  .user-pic {
+    width:55px; height:55px; border-radius:50%; background-size:cover; background-position:center;
+    margin-right:15px; border:2px solid #3a7ef5;
+  }
+  .user-info h2 { font-size:1.1rem; color:#333; }
+  .user-info p { font-size:0.9rem; color:#666; }
+
+  /* --- Bottom Bar --- */
+  .bottom-bar-cont {
+    width:100%; height:55px; background: rgba(58,126,245,0.95); display:flex;
+    justify-content:space-around; align-items:center; color:#fff; font-weight:bold; backdrop-filter: blur(10px);
+  }
+  .bottom-bar-cont a { color:#fff; text-decoration:none; font-size:1rem; transition:0.2s; }
+  .bottom-bar-cont a:hover { color:#ffea00; }
+
+  /* --- Drawer --- */
+  .drawer {
+    position:fixed; top:0; left:-280px; width:280px; height:100%;
+    background:#fff; box-shadow:3px 0 20px rgba(0,0,0,0.3); z-index:1000;
+    display:flex; flex-direction:column; padding:20px; border-radius:0 15px 15px 0;
+    transition: left 0.3s ease, box-shadow 0.3s;
+  }
+  .drawer.open { left:0; box-shadow:5px 0 30px rgba(0,0,0,0.4); }
+  .drawer h2 { color:#3a7ef5; margin-bottom:20px; letter-spacing:1px; }
+  .drawer button {
+    padding:12px 15px; margin:5px 0; border-radius:8px; border:none;
+    background: #3a7ef5; color:#fff; cursor:pointer; font-size:1rem; transition:0.2s;
+  }
+  .drawer button:hover { background:#2575fc; transform: scale(1.05); }
+
+  /* Scrollbar */
+  #userList::-webkit-scrollbar { width:6px; }
+  #userList::-webkit-scrollbar-thumb { background:#3a7ef5; border-radius:3px; }
+  #userList::-webkit-scrollbar-track { background:transparent; }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .user-pic { width:45px; height:45px; }
+    .user-info h2 { font-size:1rem; }
+    .user-info p { font-size:0.8rem; }
+    .top-bar .title { font-size:1.1rem; }
+  }
+</style>
+</head>
+<body>
+<!--Contacts Page-->
+<div id="contactsPage">
+<div class="top-bar-cont">
+  <div class="menu-btn" id="menuBtn">☰</div>
+  <div class="title">Chats</div>
+  <div class="settings-btn">⚙️</div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search contacts...">
+</div>
+
+<div id="userList"></div>
+
+<div class="bottom-bar-cont">
+  <a href="#">🏠 Home</a>
+  <a href="#">🔍 Search</a>
+  <a href="#">💬 Chats</a>
+  <a href="#">⚙ Settings</a>
+</div>
+
+<div class="drawer" id="drawer">
+  <h2>Settings</h2>
+  <button>Profile</button>
+  <button>Account</button>
+  <button>Privacy</button>
+  <button>Logout</button>
+</div>
+</div>
+<script>
+
+  // Contacts Page Script
+const userList = document.getElementById("userList");
+const searchInput = document.getElementById("searchInput");
+const drawer = document.getElementById("drawer");
+const menuBtn = document.getElementById("menuBtn");
+
+fetch("/path/online")
+.then(type=> type.json())
+.then(data=>{
+  let ev= data.everyone
+let users=[ev]
+// Render users
+function updateUsers(arr){
+  userList.innerHTML = "";
+  arr.forEach(u=>{
+    const div=document.createElement("div");
+    div.classList.add("user");
+    div.innerHTML = `<div class="user-pic" style="background-image:url('${u.pic}')"></div>
+                     <div class="user-info"><h2>${u.name}</h2><p>${u.msg}</p></div>`;
+    userList.appendChild(div);
+  });
+}
+updateUsers(users);
+
+// Search filter
+searchInput.addEventListener("keyup",()=>{
+  const filter = searchInput.value.toLowerCase();
+  updateUsers(users.filter(u=>u.name.toLowerCase().includes(filter)));
+});
+});
+
+// Drawer toggle
+menuBtn.addEventListener("click",()=> drawer.classList.toggle("open"));
+
+// Ultra-sensitive swipe gestures
+let startX = 0;
+drawer.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+drawer.addEventListener('touchmove', e => {
+  const delta = e.touches[0].clientX - startX;
+  if(delta > 30) drawer.classList.add("open");
+  else if(delta < -30) drawer.classList.remove("open");
+});
+drawer.addEventListener('touchend', () => drawer.style.left = drawer.classList.contains("open") ? "0px" : "-280px");
+
+// Scroll animation for user list
+userList.addEventListener('scroll', () => {
+  const userDivs = document.querySelectorAll('.user');
+  const listHeight = userList.clientHeight;
+  userDivs.forEach(div => {
+    const rect = div.getBoundingClientRect();
+    const distanceFromTop = rect.top - userList.getBoundingClientRect().top;
+    const distanceFromBottom = listHeight - distanceFromTop;
+    let scale = 1;
+    if(distanceFromTop < 50) scale = 0.85 + (distanceFromTop/50)*0.15;
+    else if(distanceFromBottom < 50) scale = 0.85 + (distanceFromBottom/50)*0.15;
+    div.style.transform = `scale(${scale})`;
+    div.style.opacity = scale;
+  });
+});
+</script>
+
+</body>
+</html>
