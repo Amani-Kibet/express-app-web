@@ -217,8 +217,8 @@ setTimeout(() => popup.classList.remove("hide"), 500);
 }, 6000);
 }
 
-window.addEventListener("online", () => {showPopup("online"); console.log("online")});
-window.addEventListener("offline", () => {showPopup("offline"); console.log("offline")});
+window.addEventListener("online", () => showPopup("online"));
+window.addEventListener("offline", () => showPopup("offline"));
 
 window.addEventListener("load", () => {
 if (!navigator.onLine) showPopup("offline");
