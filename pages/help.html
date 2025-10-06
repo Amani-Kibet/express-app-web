@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help & Guide</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+scroll-behavior: smooth;
+}
+body {
+font-family: "Poppins", sans-serif;
+background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+color: #f8f8f8;
+overflow-x: hidden;
+position: relative;
+}
+.bg-float {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: -1;
+}
+.circle {
+position: absolute;
+border-radius: 50%;
+background: linear-gradient(45deg, #00b7ff, #0072ff);
+opacity: 0.15;
+animation: floaty 20s infinite ease-in-out alternate;
+}
+.circle:nth-child(1) { width: 250px; height: 250px; top: 10%; left: 15%; animation-delay: 0s; }
+.circle:nth-child(2) { width: 350px; height: 350px; top: 50%; left: 70%; animation-delay: 4s; }
+.circle:nth-child(3) { width: 200px; height: 200px; top: 80%; left: 30%; animation-delay: 8s; }
+@keyframes floaty {
+0% { transform: translateY(0) rotate(0deg); }
+100% { transform: translateY(-50px) rotate(360deg); }
+}
+.header {
+position: sticky;
+top: 0;
+backdrop-filter: blur(12px);
+background: rgba(0,0,0,0.3);
+border-bottom: 1px solid rgba(255,255,255,0.1);
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1.2rem 2rem;
+z-index: 10;
+}
+.header h1 {
+font-size: 1.8rem;
+background: linear-gradient(90deg, #00b7ff, #00ffb7);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+letter-spacing: 1px;
+display: flex;
+align-items: centre;
+justify-content: centre;
+}
+#backBtn {
+background: linear-gradient(135deg, #00b7ff, #0072ff);
+border: none;
+color: #fff;
+padding: 0.7rem 1.4rem;
+border-radius: 12px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.3s ease;
+box-shadow: 0 0 15px rgba(0,183,255,0.4);
+}
+#backBtn:hover {
+transform: scale(1.07);
+box-shadow: 0 0 30px rgba(0,183,255,0.7);
+}
+/* === SCROLL CONTAINER === */
+.scroll-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6rem;
+padding: 4rem 0 6rem;
+}
+/* === EACH STEP === */
+.screenshot {
+position: relative;
+width: 85%;
+max-width: 700px;
+text-align: center;
+opacity: 0;
+transform: translateY(60px) scale(0.95);
+transition: opacity 1s ease, transform 1s ease;
+}
+.screenshot.visible {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+.screenshot::before {
+content: "";
+position: absolute;
+inset: -10px;
+border-radius: 20px;
+background: linear-gradient(45deg, #00b7ff, #00ffb7);
+opacity: 0.15;
+filter: blur(30px);
+transition: 0.5s ease;
+}
+.screenshot img {
+width: 100%;
+border-radius: 20px;
+box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.screenshot img:hover {
+transform: scale(1.03);
+box-shadow: 0 30px 90px rgba(0, 255, 255, 0.4);
+}
+.screenshot p {
+margin-top: 1.5rem;
+font-size: 1.2rem;
+color: #d0d0d0;
+line-height: 1.6;
+}
+/* === FLOATING TITLES === */
+.step-label {
+position: absolute;
+top: -1.5rem;
+left: 1rem;
+background: rgba(255,255,255,0.1);
+padding: 0.4rem 1rem;
+border-radius: 10px;
+font-size: 0.9rem;
+color: #00eaff;
+box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+animation: floatTag 1s ease-in-out infinite;
+}
+@keyframes floatTag {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-15px); }
+}
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-thumb {
+background: linear-gradient(180deg, #00b7ff, #00ffb7);
+border-radius: 10px;
+}
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+/* === SMOOTH APPEAR === */
+@keyframes fadeInPage {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+body {
+animation: fadeInPage 1.5s ease;
+}
+</style>
+</head>
+<body>
+<div class="bg-float">
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+</div>
+<header class="header">
+    <div style="font-size: 2.4rem" onclick="window.location.href='/pages/home.html'">⬅️</div>
+    <h1>💬 Unity Help Center</h1>
+</header>
+<main class="scroll-container">
+<section class="screenshot">
+<div class="step-label">Step 1</div>
+<img src="/pictures/1-p5.jpg" alt="Step 1">
+<p>Open the app and sign in to begin your journey. You’re seconds away from chatting in style! 🚀</p>
+</section>
+<section class="screenshot">
+<div class="step-label">Step 2</div>
+<img src="/pictures/2-p4.jpg" alt="Step 2">
+<p>Choose a friend or group and start chatting instantly — it’s fast, friendly, and fun 💬</p>
+</section>
+<section class="screenshot">
+<div class="step-label">Step 3</div>
+<img src="/pictures/4-p5.jpg" alt="Step 3">
+<p>Share files, memes, or selfies. Tap the upload icon and make conversations *come alive*. 📸</p>
+</section>
+<section class="screenshot">
+<div class="step-label">Step 4</div>
+<img src="/pictures/35-p5.jpg" alt="Step 4">
+<p>Turn on notifications so you’ll never miss a message — always stay connected 🔔</p>
+</section>
+<section class="screenshot">
+<div class="step-label">Step 5</div>
+<img src="/pictures/4-p5.jpg" alt="Step 5">
+<p>Make it yours! Customize your theme and profile for ultimate vibes 🌈</p>
+</section>
+</main>
+<script>
+// Fade-in on scroll
+const screenshots = document.querySelectorAll(".screenshot");
+function revealOnScroll() {
+const triggerBottom = window.innerHeight * 0.85;
+screenshots.forEach((section) => {
+const boxTop = section.getBoundingClientRect().top;
+if (boxTop < triggerBottom) {
+section.classList.add("visible");
+}
+});
+}
+window.addEventListener("scroll", revealOnScroll);
+revealOnScroll();
+</script>
+</body>
+</html>

@@ -35,8 +35,8 @@
       background: #2575fc;
       color: white;
       display: flex;
-      gap: 30%;
       align-items: center;
+      justify-content: center;
       font-weight: bold;
       font-size: 1.2rem;
       border-top-left-radius: 12px;
@@ -242,7 +242,6 @@
 </head>
 <body>
   <div class="top-bar">
-    <div class="settings-btn" id="home" style="font-size: 2.4rem">⬅️</div>
     <p> Unity </p>
   </div>
 
@@ -261,7 +260,7 @@
 
   <form id="form2" class="forms" style="display: none">
     <h2>Sign In 2/2</h2>
-    <input type="number" required class="inputs" id="dob" placeholder=" Enter Your Date of Birth...">
+    <input type="number" required class="inputs" id="dob" placeholder=" Enter The Year of Birth...">
     <input type="text" required class="inputs" id="country" placeholder=" Enter Your Country...">
     <input type="text" required class="inputs" id="county" placeholder=" Enter Your County...">
     <input type="text" required class="inputs" id="label" placeholder=" Enter Your Default Message eg. I'm available...">
@@ -278,11 +277,11 @@
     </div>
  
 
-  <div class="bottom-bar">
-    <a href="#">🏠 Home</a>
-    <a href="#">🔍 Search</a>
-    <a href="#">⚙ Settings</a>
-  </div>
+    <div class="bottom-bar">
+      <a href="#">ℹ️ Info</a>
+      <a href="#">🔊 Announcements</a>
+      <a href="/pages/help.html">❔ Help</a>
+    </div>
 </body>
 <script>
   let bt1= document.getElementById("submit");
@@ -293,10 +292,6 @@
   let form1= document.getElementById("form1");
   let form2= document.getElementById("form2");
   
-  home.addEventListener("click", ()=>{
-      window.location.href="/pages/home.html"
-  })
-
   next.addEventListener("click", (event)=>{
     event.preventDefault();
     form1.style.display="none";

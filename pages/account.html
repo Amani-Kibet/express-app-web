@@ -1,0 +1,636 @@
+<!doctype html>
+ <html lang="en">
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <title>Account — Clean Mobile UI</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#6ee7b7;
+      --glass: rgba(255,255,255,0.03);
+      --danger:#ff6b6b;
+      --success:#16a34a;
+      --chip:#111827;
+      --glass-2: rgba(255,255,255,0.02);
+      --glass-3: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.06);
+      --soft-shadow: 0 6px 18px rgba(2,6,23,0.6);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{
+      height:10%;
+      background: linear-gradient(180deg,#113ea5 0%, #0d497e 60%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+    /* Page container */
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:18px;
+      overflow: auto;
+      outline: 4px groove rgb(199, 12, 183);
+      background-color: #11ce4d;
+    }
+    /* Top balance card */
+    .balance-card{
+      position:relative;
+      background: linear-gradient(135deg, rgb(6, 28, 102), rgb(84, 106, 231));
+      border-radius:18px;
+      padding:2px;
+      box-shadow: var(--soft-shadow);
+      border:1px solid var(--glass-border);
+      overflow:hidden;
+      display:flex;
+      gap:1px;
+      align-items:center;
+      justify-content:space-between;
+      overflow: auto;
+    }
+    .balance-left{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    /* profile ring */
+    .profile-wrap{
+      position:relative;
+      width:78px;
+      height:78px;
+      flex-shrink:0;
+    }
+    .profile-ring{
+      width:100%;
+      height:100%;
+      border-radius: 100%;
+      padding:3px;
+      background:linear-gradient(135deg,#6ee7b7,#60a5fa);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .profile-img{
+      width:100%;
+      height:100%;
+      border-radius:100%;
+      object-fit:cover;
+      background:linear-gradient(180deg,#9db0d4,#dae5ee);
+      border: 2px solid rgb(21, 255, 196);
+    }
+    /* pencil button */
+    .edit-photo{
+      position:absolute;
+      right:-2px;
+      bottom:-2px;
+      background:linear-gradient(180deg,#e20f0f,#0c51e4);
+      border:1px solid var(--glass-border);
+      width:36px;
+      height:36px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 6px 10px rgba(243, 39, 39, 0.986);
+      cursor:pointer;
+      transition:transform .14s ease;
+    }
+    .edit-photo:active{ transform:scale(.95); }
+    .balance-info{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .balance-title{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.6px;
+    }
+    .balance-amount{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:0.4px;
+    }
+    .balance-meta{ font-size:12px; color:var(--muted); }
+    /* action chips */
+    .actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .btn{
+      padding:10px 14px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#09813b,#56fa24);
+      border:1px solid var(--glass-border);
+      color:inherit;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow:0 6px 14px rgba(1,6,20,0.6);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+      outline: 0.1px groove rgba(84, 77, 180, 0.699);
+    }
+    .btn.ghost{
+      background:rgb(199, 8, 8);
+      border:1px dashed rgba(255,255,255,0.04);
+    }
+    /* main form card */
+    .card{
+      margin-top:18px;
+      background:linear-gradient(180deg, rgb(0, 50, 143), rgb(6, 78, 100));
+      border-radius:14px;
+      padding:16px;
+      border:1px solid var(--glass-border);
+    }
+    .card h2{ margin:0 0 8px 0; font-size:16px; }
+    .card p.mute{ color:var(--muted); font-size:13px; margin:0 0 12px 0;}
+    .form-row{
+      display:flex;
+ flex-direction:column;
+      gap:8px;
+      margin-bottom:12px;
+    }
+    label{ font-size:13px; color:var(--muted); }
+    input[type="text"], input[type="password"], input[type="tel"], input[type="number"]{
+      background: var(--glass-2);
+      border:1px solid var(--glass-border);
+      padding:12px;
+      border-radius:10px;
+      color:inherit;
+      outline:none;
+      font-size:15px;
+    }
+    input::placeholder{ color: #39ec15; }
+    .two-cols{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .note { font-size:12px; color:var(--muted); margin-top:6px; }
+    .submit-row{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .submit{
+        flex:1;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:15px;
+      background:linear-gradient(90deg,#3b82f6,#60a5fa);
+      color:#041126;
+      border:none;
+      cursor:pointer;
+      box-shadow:0 8px 24px rgba(98, 138, 248, 0.12);
+      transform:translateY(0);
+      transition:transform .12s ease, opacity .12s ease;
+    }
+    .submit:active{ transform:translateY(2px); }
+    .submit[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+      background:linear-gradient(90deg,#263044,#1b2736);
+      color: #8b98a8;
+    }
+    /* small help text */
+    .muted-inline { color:var(--muted); font-size:13px; }
+    /* modal overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:80;
+    }
+      
+    .backdrop{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.7));
+      opacity:0;
+      animation:fadeIn .18s forwards;
+    }
+    .modal{
+      position:relative;
+      width:calc(100% - 36px);
+      max-width:420px;
+      border-radius:14px;
+      padding:16px;
+      background: linear-gradient(180deg,#df1f1f,#073a8b);
+      border:1px solid var(--glass-border);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+      transform: translateY(30px) scale(.98);
+      opacity:0;
+      animation:popIn .22s forwards;
+      z-index:90;
+    }
+    @keyframes popIn{
+      to{ transform:none; opacity:1; }
+    }
+    @keyframes popOut{
+      to{ transform: translateY(18px) scale(.98); opacity:0; }
+    }
+    @keyframes fadeIn{ to{ opacity:1; } }
+    @keyframes fadeOut{ to{ opacity:0; } }
+    .modal .title{ font-size:16px; margin-bottom:8px; }
+    .modal .grid{ display:flex; flex-direction:column; gap:10px; }
+    .pay-options{ display:flex; gap:8px;
+        align-items:center;
+     }
+    .mpesa{
+      padding:10px 12px;
+      border-radius:999px;
+      background: linear-gradient(135deg,#045a1e,#60c78b 60%);
+      color:#02210c;
+      font-weight:700;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,0.06);
+      position:relative;
+      overflow:visible;
+      box-shadow: 0 8px 20px rgba(20,90,40,0.18);
+    }
+    /* little leaf accent using pseudo */
+    .mpesa::before{
+      content:"";
+      position:absolute;
+      right:-12px;
+      top:10%;
+      width:28px;height:28px;
+      background:radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      transform: rotate(20deg);
+      border-radius:8px 0 8px 8px;
+      opacity:.9;
+    }
+    .airtel{
+      padding:8px 10px;
+      border-radius:8px;
+      background:linear-gradient(90deg,orange,#dfe238);
+      color:white;
+      font-weight:700;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      box-shadow: 0 8px 20px rgba(220,40,40,0.14);
+    }
+    .modal .row{ display:flex; gap:8px; }
+    .pin{
+      letter-spacing:3px;
+      font-size:18px;
+      font-weight:700;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid var(--glass-border);
+      background:var(--glass-3);
+      width:100%;
+      max-width:160px;
+    }
+    .confirm{
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:10px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      background:linear-gradient(90deg,#10b90a,#10b981);
+      color:#022112;
+    }
+    .close-x{
+      position:absolute;
+      right:12px;
+      top:12px;
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      cursor:pointer;
+      font-size:18px;
+    }
+    /* mobile small adjustments */
+    @media (max-width:520px){
+      .profile-wrap{ width:70px; height:70px; }
+      .balance-amount{ font-size:15px; }
+      .actions{ gap:6px; }
+      .two-cols{ grid-template-columns: 1fr; }
+    }
+    .top-bar {
+      width: 100%;
+      max-width: 600px;
+      height: 50px;
+      background: #2575fc;
+      color: white;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding: 0 10px;
+      gap: 25%;
+    }
+    #board{
+      width: 100%;
+      max-width: 600px;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      overflow-y: auto;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      background: cyan;
+      overflow: auto;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .bottom-bar {
+      width: 100%;
+      height: 55px;
+      background: #2575fc;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 1rem;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+    .bottom-bar a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .bottom-bar a:hover {
+      color: yellow;
+    }
+  </style>
+ </head>
+ <body>
+  <div class="top-bar">
+    <div class="settings-btn" id="home" style="font-size: 2.4rem" onclick="window.location.href='/pages/chat.html'">⬅️</div>
+    <p> Unity </p>
+  </div>
+  <div id="board">
+  <div class="wrap">
+    <!-- Balance card -->
+    <div class="balance-card" role="region" aria-label="account balance">
+      <div class="balance-left">
+        <div class="profile-wrap" title="Change photo">
+          <div class="profile-ring" id="profileRing">
+            <img id="profileImg" class="profile-img" alt="Profile photo" src="/pictures/p1.png">
+          </div>
+          <button class="edit-photo" id="editPhotoBtn" aria-label="Edit photo">
+            <!-- pencil svg -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" stroke="white" stroke-width="0.8" stroke
+linecap="round" stroke-linejoin="round"/>
+              <path d="M20.71 7.04a1 1 0 0 0 0-1.41L18.37 3.29a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+ stroke="white" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <input id="photoInput" type="file" accept="image/*" style="display:none" aria-hidden="true">
+        </div>
+        <div class="balance-info">
+          <div class="balance-title">Available Balance</div>
+          <div class="balance-amount" id="balanceAmount">KES 68.00</div>
+          <div class="balance-meta">Last activity: Sep 30, 2025</div>
+        </div>
+      </div>
+      <div class="actions" aria-hidden="false">
+        <button class="btn ghost" id="btnWithdraw" title="Withdraw">Withdraw</button>
+        <button class="btn" id="btnDeposit" title="Deposit">Deposit</button>
+      </div>
+    </div>
+    <!-- Main form -->
+    <div class="card" aria-labelledby="profile-title">
+      <h2 id="profile-title">Account Info </h2><h6><i>(Scroll Down)</i></h6>
+      <p class="mute">Update your display name, phone number, or password. Changes enable the Save button.
+ </p>
+      <form id="accountForm" onsubmit="return false;">
+        <div class="form-row">
+          <label for="displayName">Display name</label>
+          <input id="displayName" type="text" placeholder="Your name" value="Amani Kibet">
+        </div>
+        <div class="two-cols">
+          <div class="form-row">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" placeholder="+2547XXXXXXXX" value="+254712345678">
+          </div>
+          <div class="form-row">
+            <label for="password">New password <span class="muted-inline">(leave blank to keep)</span></label>
+            <input id="password" type="password" placeholder="••••••">
+          </div>
+          <div class="form-row">
+            <label for="label">Default Text</label>
+            <input id="label" type="text" placeholder="I'm Available..." value="Hey there, I'm Available" readonly>
+          </div>
+        </div>
+        <div class="note">Profile photo is editable by tapping the small pencil. Save applies all changes</div>
+        <div class="submit-row">
+          <button id="saveBtn" class="submit" disabled>Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modal template (hidden) -->
+  <div id="modalRoot" style="display:none;"></div>
+  </div>
+  <div class="bottom-bar">
+    <a href="#">🏠 Home</a>
+    <a href="#">🔍 Search</a>
+    <a href="#">⚙ Settings</a>
+  </div>
+  <script>
+    setInterval(()=>{
+      fetch("/acc/path1", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name:"Hello"})
+      })
+    }, 2000),
+    onclick="window.location.href='/pages/chat.html'"
+    // state
+    const state = {
+      original: {
+        name: document.getElementById('displayName').value,
+        phone: document.getElementById('phone').value,
+        password: '',
+        profileSrc: document.getElementById('profileImg').src
+      },
+      changed: false,
+      profileChanged: false
+    };
+
+    // dom
+    const saveBtn = document.getElementById('saveBtn');
+    const displayName = document.getElementById('displayName');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const profileImg = document.getElementById('profileImg');
+    const photoInput = document.getElementById('photoInput');
+    const editPhotoBtn = document.getElementById('editPhotoBtn');
+    const btnDeposit = document.getElementById('btnDeposit');
+    const btnWithdraw = document.getElementById('btnWithdraw');
+    const modalRoot = document.getElementById('modalRoot');
+    // helpers
+    function checkChanges(){
+      const changedName = displayName.value.trim() !== state.original.name.trim();
+      const changedPhone = phone.value.trim() !== state.original.phone.trim();
+      const changedPassword = password.value.length > 0;
+      const changedPhoto = state.profileChanged;
+      state.changed = changedName || changedPhone || changedPassword || changedPhoto;
+      saveBtn.disabled = !state.changed;
+    }
+    // attach input listeners
+    [displayName, phone, password].forEach(el=>{
+      el.addEventListener('input', checkChanges);
+    });
+    // photo edit flow
+    editPhotoBtn.addEventListener('click', ()=> photoInput.click());
+    profileImg.addEventListener('click', ()=> photoInput.click());
+    photoInput.addEventListener('change', (e)=>{
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      if(!file.type.startsWith('image/')) return alert('Please select an image file.');
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        profileImg.src = ev.target.result;
+        state.profileChanged = true;
+        checkChanges();
+      }
+      reader.readAsDataURL(file);
+    });
+    // Save button behavior (simulate submit)
+    saveBtn.addEventListener('click', async ()=>{
+      if(saveBtn.disabled) return;
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+      // simulate server save (replace with actual fetch)
+      await new Promise(r=>setTimeout(r, 900));
+      // update original state snapshot
+      state.original.name = displayName.value.trim();
+      state.original.phone = phone.value.trim();
+      state.original.password = '';
+      state.original.profileSrc = profileImg.src;
+      state.profileChanged = false;
+      password.value = '';
+      checkChanges();
+      saveBtn.textContent = 'Saved';
+
+      setTimeout(()=> saveBtn.textContent = 'Save changes', 1300);
+    });
+    // deposit/withdraw modal generator
+    function openPaymentModal(mode='deposit'){
+      // create modal markup
+      modalRoot.style.display = 'block';
+      modalRoot.innerHTML = `
+        <div class="overlay" id="overlayRoot" role="dialog" aria-modal="true">
+          <div class="backdrop"></div>
+          <div class="modal" role="document">
+            <button class="close-x" id="closeModal" title="Close">✕</button>
+            <div class="title">${mode === 'deposit' ? 'Deposit funds' : 'Withdraw funds'}</div>
+            <div class="grid">
+              <div class="pay-options" aria-hidden="false">
+                <div class="mpesa" id="optMpesa">
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden><path fill="white" d="M12 2L3 7v7c0 5 7
+ 8 9 8s9-3 9-8V7l-9-5z"/></svg>
+                  M-PESA
+                </div>
+                <div class="airtel" id="optAirtel">
+                  <svg width="16" height="12" viewBox="0 0 24 24" aria-hidden><path fill="white" d="M2
+ 4h20v16H2z"/></svg>
+                  AIRTEL
+                </div>
+              </div>
+              <div>
+                <label>Amount</label>
+                <input id="payAmount" type="number" min="1" step="1" placeholder="Enter amount (KES)" />
+              </div>
+              <div>
+                <label>Mpesa PIN</label>
+                <input id="mpesaPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" class="pin"
+ placeholder="••••" />
+                <div class="note">PIN required for MPESA. Do not share publicly.</div>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button id="cancel" class="btn ghost">Cancel</button>
+                <button id="confirm" class="confirm" disabled>Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      // hook events
+      const overlay = document.getElementById('overlayRoot');
+      const closeModal = document.getElementById('closeModal');
+      const cancel = document.getElementById('cancel');
+      const confirm = document.getElementById('confirm');
+      const payAmount = document.getElementById('payAmount');
+      const mpesaPin = document.getElementById('mpesaPin');
+      function close(flow='user'){
+        // animate exit
+        const modalEl = overlay.querySelector('.modal');
+        const backdrop = overlay.querySelector('.backdrop');
+        modalEl.style.animation = 'popOut .18s forwards';
+        backdrop.style.animation = 'fadeOut .18s forwards';
+        setTimeout(()=> {
+          modalRoot.innerHTML = '';
+          modalRoot.style.display = 'none';
+        }, 190);
+      }
+      // simple validation: amount >0 and pin length >=4 (simulate)
+      function validatePay(){
+        const amt = Number(payAmount.value);
+        const pinOk = mpesaPin.value.trim().length >= 4;
+        confirm.disabled = !(amt > 0 && pinOk);
+        
+      }
+      payAmount.addEventListener('input', validatePay);
+      mpesaPin.addEventListener('input', validatePay);
+      closeModal.addEventListener('click', close);
+      cancel.addEventListener('click', close);
+      confirm.addEventListener('click', async ()=>{
+        confirm.disabled = true;
+        confirm.textContent = 'Processing...';
+        // tiny simulated processing
+        await new Promise(r=>setTimeout(r, 950));
+        // close and update balance (demo)
+        const balEl = document.getElementById('balanceAmount');
+        let current = Number(balEl.textContent.replace(/[^0-9.-]+/g,""));
+        const amt = Number(payAmount.value) || 0;
+        if(mode === 'deposit') current += amt;
+        else current = Math.max(0, current - amt);
+        balEl.textContent = new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES',
+ maximumFractionDigits: 2 }).format(current);
+        close();
+      });
+ 
+    }
+    // attach deposit/withdraw
+    btnDeposit.addEventListener('click', ()=> openPaymentModal('deposit'));
+    btnWithdraw.addEventListener('click', ()=> openPaymentModal('withdraw'));
+    // initial check
+    checkChanges();
+
+  </script>
+ </body>
+ </html>
