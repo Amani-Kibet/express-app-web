@@ -211,9 +211,9 @@
       background-color: black;
       width: 50px;
       height: 50px;
-      min-width: 50px;
-      min-height: 50px;
-      flex-shrink: 0;
+      min-width: 50px;   /* 🧠 prevents shrinking horizontally */
+      min-height: 50px;  /* 🧠 prevents shrinking vertically */
+      flex-shrink: 0;    /* 🚫 disables shrinking inside flex container */
       position: relative;
       border-radius: 50%;
       border: 3px solid transparent;
@@ -327,6 +327,7 @@
       backdrop-filter: blur(12px);
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
       }
+      /* Online / Offline colors + glow */
       .popup.online {
       background: rgba(16, 185, 129, 0.15);
       border: 2px solid #22c55e;
@@ -337,7 +338,7 @@
       border: 2px solid #ef4444;
       box-shadow: 0 0 30px #ef4444, 0 0 60px rgba(239, 68, 68, 0.4);
       }
-  
+      /* Glow animation effect */
       @keyframes pulseGlow {
       0% {
       transform: translate(-50%, -50%) scale(1);
@@ -352,7 +353,7 @@
       box-shadow: 0 0 30px var(--glow), 0 0 60px rgba(var(--rgb), 0.3);
       }
       }
-      
+      /* Entrance and exit */
       .show {
       animation: fadeInUp 0.5s ease forwards, pulseGlow 2s ease-in-out infinite;
       }
