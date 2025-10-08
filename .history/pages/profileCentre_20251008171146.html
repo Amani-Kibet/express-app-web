@@ -39,8 +39,7 @@ h2 { color:red; font-size:1.6rem; margin-bottom:5%; }
 
 /* Inputs */
 .inputs {
-  width:90%;
-  padding:1rem; margin:0.4rem 0; border-radius:10px;
+  width:90%; padding:1rem; margin:0.4rem 0; border-radius:10px;
   font-size:clamp(1rem,3vw,1.5rem); background-color: rgba(186, 247, 245,1);
   border:none; outline:2px solid #ccc; transition:0.3s;
 }
@@ -112,26 +111,17 @@ hr {
     <input type="tel" name="phone" placeholder="Phone Number" class="inputs" required>
     <input type="email" name="email" placeholder="Email Address" class="inputs" required>
     <input type="number" name="age" placeholder="Age" class="inputs" min="10" max="100" required>
-    
     <select name="gender" class="inputs" required>
       <option value="">Select Gender</option>
       <option>Male</option>
       <option>Female</option>
       <option>Other</option>
     </select>
-  
     <input type="text" name="county" placeholder="County" class="inputs" required>
-  
-    <!-- 🟩 New Default Message Field -->
-    <input type="text" name="label" placeholder="Default Message" class="inputs">
     <input type="password" name="password" placeholder="New Password" class="inputs" id="password">
     <input type="password" name="confirmPassword" placeholder="Confirm Password" class="inputs" id="confirmPassword">
-  
-    <!-- 🟩 New Profile Picture Field -->
-    <label style="color:red; margin-top:1rem; font-style: italic;">(Profile Picture)</label>
-    <input type="file" name="profilePic" accept="image/*" class="inputs">
-  
-    <label style="color:red; margin-top:1.1rem; margin-bottom:1rem; font-weight:bold;">Post up to 6 Photos</label>
+
+    <label style="color:red; margin-top:1.1rem; margin-bottom: 1rem ;font-weight: bold">Post up to 6 Photos</label>
     <hr>
     <div class="file-inputs">
       <input type="file" name="photos" accept="image/*">
@@ -144,7 +134,6 @@ hr {
 
     <button type="submit" id="submit">Save Profile</button>
   </form>
-  
 </div>
 
 <div class="bottom-bar-prof">

@@ -334,61 +334,70 @@ app.post("/confirm-user", async (req, res) => {
 
 
 
-app.post("/update-profile", filex.array("photos", 6), async (req, res) => {
+app.post("/update-profile", filex.fields([
+  { name: "profilePic", maxCount: 1 },
+  { name: "photos", maxCount: 6 }
+]), async (req, res) => {
   try {
-    const { userId, name, phone, email, age, gender, county, password } = req.body;
-
-    // Find the user by ID
+    const { userId, name, phone, email, age, gender, county, password, label } = req.body;
     const user = await contacts.findById(userId);
-    if(!user) return res.status(404).json({ message: "User not found ❌" });
+    if (!user) return res.status(404).json({ message: "User not found ❌" });
 
-    // Upload new images to ImgBB if any provided
     const uploadedUrls = [];
-    if(req.files && req.files.length > 0){
-      for(let i = 0; i < req.files.length; i++){
-        const imageFile = fs.readFileSync(req.files[i].path, { encoding: "base64" });
-        const form = new FormData();
-        form.append("image", imageFile);
-        form.append("key", IMGBB_API_KEY);
 
-        const response = await axios.post("https://api.imgbb.com/1/upload", form, {
+    // ✅ Upload profile picture (single)
+    if (req.files?.profilePic?.length > 0) {
+      const imageFile = fs.readFileSync(req.files.profilePic[0].path, { encoding: "base64" });
+      const form = new FormData();
+      form.append("image", imageFile);
+      form.append("key", IMGBB_API_KEY);
+
+      const response = await axios.post("https://api.imgbb.com/1/upload", form, {
+        headers: form.getHeaders(),
+      });
+      fs.unlinkSync(req.files.profilePic[0].path);
+      user.profilePic = response.data.data.url; // store profile picture link
+    }
+
+    // ✅ Upload gallery photos
+    if (req.files?.photos?.length > 0) {
+      for (const file of req.files.photos) {
+        const img = fs.readFileSync(file.path, { encoding: "base64" });
+        const form = new FormData();
+        form.append("image", img);
+        form.append("key", IMGBB_API_KEY);
+        const res2 = await axios.post("https://api.imgbb.com/1/upload", form, {
           headers: form.getHeaders(),
         });
-
-        fs.unlinkSync(req.files[i].path); // remove temp file
-        uploadedUrls.push(response.data.data.url);
+        fs.unlinkSync(file.path);
+        uploadedUrls.push(res2.data.data.url);
       }
-      user.gallery = uploadedUrls; // replace old gallery
+      user.gallery = uploadedUrls; // overwrite gallery
     }
 
-    // Update other fields if provided
-    if(name) user.name = name;
-    if(phone) user.phone = phone;
-    if(email) user.email = email;
-    if(age) user.age = age;
-    if(gender) user.gender = gender;
-    if(county) user.county = county;
-
-    // Save password as plain string
-    if(password && password.trim().length > 0){
-      user.password = password.trim();
-    }
+    // ✅ Update text fields
+    if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (email) user.email = email;
+    if (age) user.age = age;
+    if (gender) user.gender = gender;
+    if (county) user.county = county;
+    if (label) user.label = label; // store default message
+    if (password && password.trim().length > 0) user.password = password.trim();
 
     await user.save();
 
-    res.json({ 
-      message: "✅ Profile updated successfully!", 
-      uploadedCount: uploadedUrls.length 
+    res.json({
+      message: "✅ Profile updated successfully!",
+      uploadedCount: uploadedUrls.length,
+      profilePic: user.profilePic
     });
 
-  } catch(err){
+  } catch (err) {
     console.error(err);
     res.status(500).json({ message: "❌ Failed to update profile" });
   }
 });
-
-
-
 
 
 

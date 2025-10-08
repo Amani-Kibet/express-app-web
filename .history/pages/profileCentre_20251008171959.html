@@ -124,11 +124,9 @@ hr {
   
     <!-- 🟩 New Default Message Field -->
     <input type="text" name="label" placeholder="Default Message" class="inputs">
-    <input type="password" name="password" placeholder="New Password" class="inputs" id="password">
-    <input type="password" name="confirmPassword" placeholder="Confirm Password" class="inputs" id="confirmPassword">
   
     <!-- 🟩 New Profile Picture Field -->
-    <label style="color:red; margin-top:1rem; font-style: italic;">(Profile Picture)</label>
+    <label style="color:red; margin-top:1rem; font-weight:bold;">Profile Picture</label>
     <input type="file" name="profilePic" accept="image/*" class="inputs">
   
     <label style="color:red; margin-top:1.1rem; margin-bottom:1rem; font-weight:bold;">Post up to 6 Photos</label>
@@ -141,7 +139,10 @@ hr {
       <input type="file" name="photos" accept="image/*">
       <input type="file" name="photos" accept="image/*">
     </div>
-
+  
+    <input type="password" name="password" placeholder="New Password" class="inputs" id="password">
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" class="inputs" id="confirmPassword">
+  
     <button type="submit" id="submit">Save Profile</button>
   </form>
   
