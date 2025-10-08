@@ -466,6 +466,23 @@ app.post("/update-profile", filex.fields([
       transform: scale(0.5);
       transition: opacity 1s ease, transform 1s ease;
       }
+      h2{
+      position: absolute;
+      top: -168%;
+      font-size: 1.5rem;
+      color: white;
+      width: 20rem;
+      text-align: center;
+      }
+      h3{
+        position: absolute;
+        top: -140%;
+        font-size: 0.8rem;
+        color: white;
+        width: 20rem;
+        text-align: center;
+        font-style: italic;
+      }
       /* Keyframes */
       @keyframes spin {
       from { transform: rotate(0deg); }
@@ -492,6 +509,8 @@ app.post("/update-profile", filex.fields([
       </head>
       <body>
       <div class="startup" id="startup">
+      <h2>Moi University</h2>
+      <h3>(By Kesir Amani x Rick)</h3>
       <div class="spinner"></div>
       <div class="app-name">Unity</div>
       </div>
