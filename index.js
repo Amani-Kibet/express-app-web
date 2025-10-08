@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const axios= require("axios");
 const fs= require("fs");
 const FormData= require("form-data");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const server = http.createServer(app);
@@ -307,50 +308,87 @@ app.post("/markAsRead", async (req, res) => {
   }
 });
 
+app.post("/confirm-user", async (req, res) => {
+  try {
+    const { phone, password } = req.body;
+
+    if(!phone || !password){
+      return res.json({ success: false, message: "Please provide phone and password ❌" });
+    }
+
+    // Directly find the user by phone AND password
+    let arr = await contacts.find({ phone: phone, password: password });
+
+    if(arr.length === 0){
+      return res.json({ success: false, message: "Incorrect phone or password ❌" });
+    }
+
+    // User found
+    res.json({ success: true, userId: arr[0]._id, info: arr[0] });
+
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error ❌" });
+  }
+});
+
+
 
 app.post("/update-profile", filex.array("photos", 6), async (req, res) => {
   try {
-    const { name, phone, email, age, gender, county } = req.body;
+    const { userId, name, phone, email, age, gender, county, password } = req.body;
 
-    // find the user first
-    const user = await contacts.findOne({ phone });
-    if (!user) return res.status(404).json({ message: "User not found ❌" });
+    // Find the user by ID
+    const user = await contacts.findById(userId);
+    if(!user) return res.status(404).json({ message: "User not found ❌" });
 
-    // upload all selected images to ImgBB
+    // Upload new images to ImgBB if any provided
     const uploadedUrls = [];
-    for (let i = 0; i < req.files.length; i++) {
-      const imageFile = fs.readFileSync(req.files[i].path, { encoding: "base64" });
-      const form = new FormData();
-      form.append("image", imageFile);
-      form.append("key", IMGBB_API_KEY);
+    if(req.files && req.files.length > 0){
+      for(let i = 0; i < req.files.length; i++){
+        const imageFile = fs.readFileSync(req.files[i].path, { encoding: "base64" });
+        const form = new FormData();
+        form.append("image", imageFile);
+        form.append("key", IMGBB_API_KEY);
 
-      const response = await axios.post("https://api.imgbb.com/1/upload", form, {
-        headers: form.getHeaders(),
-      });
+        const response = await axios.post("https://api.imgbb.com/1/upload", form, {
+          headers: form.getHeaders(),
+        });
 
-      // clean up temp files
-      fs.unlinkSync(req.files[i].path);
-
-      uploadedUrls.push(response.data.data.url);
+        fs.unlinkSync(req.files[i].path); // remove temp file
+        uploadedUrls.push(response.data.data.url);
+      }
+      user.gallery = uploadedUrls; // replace old gallery
     }
 
-    // Update user info & gallery
-    user.name = name;
-    user.email = email;
-    user.age = age;
-    user.gender = gender;
-    user.county = county;
-    // Add to gallery (append new images)
-    user.gallery = [...(user.gallery || []), ...uploadedUrls];
+    // Update other fields if provided
+    if(name) user.name = name;
+    if(phone) user.phone = phone;
+    if(email) user.email = email;
+    if(age) user.age = age;
+    if(gender) user.gender = gender;
+    if(county) user.county = county;
+
+    // Save password as plain string
+    if(password && password.trim().length > 0){
+      user.password = password.trim();
+    }
 
     await user.save();
 
-    res.json({ message: "✅ Profile updated successfully!", uploadedCount: uploadedUrls.length });
-  } catch (err) {
+    res.json({ 
+      message: "✅ Profile updated successfully!", 
+      uploadedCount: uploadedUrls.length 
+    });
+
+  } catch(err){
     console.error(err);
     res.status(500).json({ message: "❌ Failed to update profile" });
   }
 });
+
+
+
 
 
 

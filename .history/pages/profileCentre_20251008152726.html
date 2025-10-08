@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Update</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ===== Body & Layout ===== */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  background: linear-gradient(135deg, #961ba7ff, #4f87eeff);
+}
+
+/* ===== Top Bar ===== */
+.top-bar-log {
+  width: 100%;
+  max-width: 600px;
+  height: 55px;
+  background: #2575fc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 0 10px;
+  margin-bottom: 1rem;
+}
+
+/* ===== Form Container ===== */
+#board {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem 0;
+  box-shadow: 0 8px 25px black;
+  background: rgba(13, 221, 141, 0.95);
+  max-height: 80vh
+}
+
+form {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h2{
+  color: red;
+  font-size: 1.6rem;
+  margin-bottom: 5%;
+}
+/* ===== Inputs ===== */
+.inputs {
+  width: 90%;
+  padding: 1rem;
+  margin: 0.4rem 0;
+  border-radius: 10px;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  background-color: rgba(186, 247, 245, 1);
+  border: none;
+  outline: 2px solid #ccc;
+  transition: 0.3s;
+}
+
+.inputs:focus {
+  outline: 3px solid #2575fc;
+  background-color: #ffffffff;
+}
+
+/* ===== Submit Button ===== */
+#submit {
+  background: rgba(216, 202, 13, 1);
+  width: 70%;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-radius: 20px;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  outline: 1px groove red;
+}
+
+#submit:hover {
+  background: linear-gradient(90deg, #09319e, #5abfee);
+  transform: scale(0.95);
+}
+.top-bar-prof {
+  width: 100%;
+  max-width: 600px;
+  height: 55px;
+  background: #2575fc;
+  color: white;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 0 10px;
+}
+/* ===== Bottom Bar ===== */
+.bottom-bar-prof {
+  width: 100%;
+  max-width: 600px;
+  height: 60px;
+  background: #2575fc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1rem;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-top: 1rem;
+}
+
+.bottom-bar-prof a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.bottom-bar-prof a:hover {
+  color: yellow;
+}
+
+/* ===== File Inputs Grid ===== */
+.file-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  width: 90%;
+  margin-top: 0.5rem;
+}
+
+.file-inputs input {
+  background: rgba(186, 247, 245, 1);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar-prof">
+  <div class="back-btn" onclick="window.location.href='/pages/chat.html'" style="margin-right: 20%">⬅️</div>
+  Profile Centre
+</div>
+
+<!-- Form Board -->
+<div id="board">
+  <h2>Update Your Profile</h2>
+  <form id="profileForm" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Full Name" class="inputs" required>
+    <input type="tel" name="phone" placeholder="Phone Number" class="inputs" required>
+    <input type="email" name="email" placeholder="Email Address" class="inputs" required>
+    <input type="number" name="age" placeholder="Age" class="inputs" min="10" max="100" required>
+    <select name="gender" class="inputs" required>
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+    <input type="text" name="county" placeholder="County" class="inputs" required>
+
+    <!-- New Password Fields -->
+    <input type="password" name="password" placeholder="New Password" class="inputs" id="password">
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" class="inputs" id="confirmPassword">
+    <label style="color:red; margin-top:1rem;">Post up to 6 Photos</label>
+    <div class="file-inputs">
+      <input type="file" name="photos" accept="image/*">
+      <input type="file" name="photos" accept="image/*">
+      <input type="file" name="photos" accept="image/*">
+      <input type="file" name="photos" accept="image/*">
+      <input type="file" name="photos" accept="image/*">
+      <input type="file" name="photos" accept="image/*">
+    </div>
+
+    <button type="submit" id="submit">Save Profile</button>
+  </form>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar-prof">
+  <a href="/pages/chat.html">🏠 Home</a>
+  <a href="#">🔊 Announcements</a>
+  <a href="/pages/help.html">❔ Help</a>
+</div>
+
+<script>
+const form = document.getElementById('profileForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+
+  if(password && password !== confirmPassword){
+    alert("Passwords do not match!");
+    return;
+  }
+
+  const formData = new FormData(form);
+  try {
+    const res = await fetch('/update-profile', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    alert(data.message || "Profile updated successfully!");
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed. Try again!");
+  }
+});
+</script>
+
+</body>
+</html>
