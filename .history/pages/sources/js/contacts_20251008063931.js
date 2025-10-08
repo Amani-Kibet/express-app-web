@@ -6,26 +6,15 @@ let drawerF= document.getElementById("drawer");
 let drawerI= document.getElementById("drawer");
 
 let isOpen = false;
-function openMenu(page) {
-  let currentDrawer, currentBtn;
-
-  if(page === 'contacts') {
-    currentDrawer = document.getElementById("drawer");
-    currentBtn = document.getElementById("menuBtn");
-  } else if(page === 'friends') {
-    currentDrawer = document.getElementById("drawerF");
-    currentBtn = document.getElementById("menuBtnF");
-  } else if(page === 'inbox') {
-    currentDrawer = document.getElementById("drawerI");
-    currentBtn = document.getElementById("menuBtnI");
-  }
-
-  if(currentDrawer && currentBtn){
-    currentDrawer.classList.toggle("open");
-    currentBtn.style.background = currentDrawer.classList.contains("open") ? "cyan" : "none";
-  }
-}
-
+        function openMenu() {
+          drawer.classList.toggle("open");
+          drawerF.classList.toggle("open");
+          drawerI.classList.toggle("open");
+          isOpen = !isOpen;
+          menuBtn.style.background = isOpen ? "cyan" : "none";
+          menuBtnF.style.background = isOpen ? "cyan" : "none";
+          menuBtnI.style.background = isOpen ? "cyan" : "none";
+        };
 
         userList.addEventListener('scroll', () => {
   const userDivs = document.querySelectorAll('.user');
