@@ -10,36 +10,51 @@ let sounds= {
 let page = io();
 let popup = document.getElementById("popup");
 let timeout;
+let inboxPage= document.getElementById("inboxPage")
 
-function openChat(info2) {
-    let contactsPage = document.getElementById("contactsPage");
+async function openChat(info2) {
+  let contactsPage = document.getElementById("contactsPage");
+  chatPage.style.display = "block";
+  contactsPage.style.display = "none";
+  friendsPage.style.display = "none";
+  inboxPage.style.display = "none";
 
-    chatPage.style.display = "block";
-    contactsPage.style.display = "none";
-    friendsPage.style.display="none";
-  
-    pic.style.background = `url(/pictures/${info2.piclink})`;
-    pic.style.backgroundSize = "cover";
-    nameinfo.innerHTML = info2.name;
-    phoneinfo.innerHTML = info2.phone;
-    console.log(info2.phone)
+  pic.style.background = `url(${info2.piclink})`;
+  pic.style.backgroundSize = "cover";
+  nameinfo.innerHTML = info2.name;
+  phoneinfo.innerHTML = info2.phone;
 
+  console.log("Opening chat with:", info2.phone);
 
-    fetch("/chat/path4", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone1: info1.phone, phone2: info2.phone })
-    })
+  // ✅ Step 1: Mark messages as read (via backend)
+  await fetch("/markAsRead", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userPhone: info1.phone,  // logged-in user
+      senderPhone: info2.phone // person you're chatting with
+    }),
+  })
+  .then(res => res.json())
+  .then(data => console.log("Marked as read ✅", data))
+  .catch(err => console.error("Error marking as read:", err));
+
+  // ✅ Step 2: Fetch chat messages
+  fetch("/chat/path4", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone1: info1.phone, phone2: info2.phone }),
+  })
     .then(res => res.json())
     .then(data => {
       chat.innerHTML = "";
-  
+
       let received = data.msgReceivedD;
       let sent = data.msgSentD;
-  
+
       let i = 0, j = 0;
       let allMsgs = [];
-  
+
       // Alternate manually but START with sent
       while (i < received.length || j < sent.length) {
         if (j < sent.length) {
@@ -51,14 +66,14 @@ function openChat(info2) {
           i++;
         }
       }
-  
+
       // Flash messages one by one
       let k = 0;
       function showNext() {
         if (k < allMsgs.length) {
           let msg = allMsgs[k];
           let bubble = document.createElement("div");
-  
+
           if (msg.type === "sent") {
             bubble.className = "chat-bubble chat-right";
             bubble.textContent = `${msg.message} (${msg.time})`;
@@ -66,20 +81,52 @@ function openChat(info2) {
             bubble.className = "chat-bubble chat-left";
             bubble.textContent = `${msg.message} (${msg.time})`;
           }
-  
+
           chat.appendChild(bubble);
           chat.scrollTop = chat.scrollHeight;
-  
+
           k++;
           setTimeout(showNext, 20); // adjust speed
         }
       }
       showNext();
+
+      // ✅ Step 3: Refresh inbox unread count
+      fetchAndRenderInbox();
     });
-    
-    
-    //End of openChat
-  };
+}
+
+
+  async function loadInbox() {
+    const phone = info1.phone;
+    const res = await fetch("/inbox", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+    const inboxDiv = document.getElementById("inbox");
+    inboxDiv.innerHTML = "";
+  
+    data.inbox.forEach(chat => {
+      const div = document.createElement("div");
+      div.className = "chat-item";
+      div.innerHTML = `
+        <div class="chat-pic" style="background-image:url(${chat.piclink})"></div>
+        <div class="chat-info">
+          <h3>${chat.name}</h3>
+          <p>${chat.lastMessage}</p>
+        </div>
+        ${chat.unreadCount > 0 ? `<div class="unread-badge">${chat.unreadCount}</div>` : ""}
+      `;
+  
+      div.addEventListener("click", () => openChat(chat));
+      inboxDiv.appendChild(div);
+    });
+  }
+  
+  loadInbox();
+  
 
   function typeMessage(text, container) {
     container.style.whiteSpace = "pre-wrap";

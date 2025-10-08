@@ -1,11 +1,20 @@
 let menuBtn= document.getElementById("menuBtn");
+let menuBtnF= document.getElementById("menuBtn");
+let menuBtnI= document.getElementById("menuBtn");
+let drawer= document.getElementById("drawer");
+let drawerF= document.getElementById("drawer");
+let drawerI= document.getElementById("drawer");
 
 let isOpen = false;
-        menuBtn.addEventListener("click", () => {
+        function openMenu() {
           drawer.classList.toggle("open");
+          drawerF.classList.toggle("open");
+          drawerI.classList.toggle("open");
           isOpen = !isOpen;
           menuBtn.style.background = isOpen ? "cyan" : "none";
-        });
+          menuBtnF.style.background = isOpen ? "cyan" : "none";
+          menuBtnI.style.background = isOpen ? "cyan" : "none";
+        };
 
         userList.addEventListener('scroll', () => {
   const userDivs = document.querySelectorAll('.user');

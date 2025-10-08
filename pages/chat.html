@@ -99,7 +99,7 @@
 <!--Contacts Page-->
 <div id="contactsPage" style="display: none">
 <div class="top-bar-cont">
-  <div class="menu-btn" id="menuBtn">☰</div>
+  <div class="menu-btn" id="menuBtn" onclick="openMenu()">☰</div>
   <div class="title" id="contTitle">Chats</div>
 </div>
 
@@ -110,9 +110,15 @@
 <div id="userList"></div>
 
 <div class="bottom-bar-cont">
-  <div style="font-size: 2rem"onclick="friendsPage.style.display='none'; contactsPage.style.display='block'">🏠</div>
-  <div id="openFriends">🎁 My Interests</div>
-  <a href="#">⭐ Starred</a>
+  <div style="font-size: 2rem"onclick="friendsPage.style.display='none'; contactsPage.style.display='block'; inboxPage.style.display='none'">🏠</div>
+  <div id="openFriends" onclick="openFriends()" style="position: relative;">
+    🎁 Likes
+    <span id="interestsBadge">0</span>
+  </div>
+  <div id="openInbox" onclick="openInbox()" style="position: relative;">
+    📩 Inbox
+    <span id="inboxBadge">0</span>
+  </div>
   <a href="#">🧑‍🤝‍🧑 Rooms</a>
 </div>
 
@@ -129,7 +135,7 @@
 <!--Friends Page-->
 <div id="friendsPage" style="display: none">
 <div class="top-bar-cont">
-  <div class="menu-btn" id="menuBtnF">☰</div>
+  <div class="menu-btn" id="menuBtnF" onclick="openMenu()">☰</div>
   <div class="title" id="contTitleF">Chats</div>
 </div>
 
@@ -140,18 +146,63 @@
 <div id="userListF"></div>
 
 <div class="bottom-bar-cont">
-  <div style="font-size: 2rem"onclick="friendsPage.style.display='none'; contactsPage.style.display='block'">🏠</div>
-  <div id="openFriends">🎁 My Interests</div>
-  <a href="#">⭐ Starred</a>
+  <div style="font-size: 2rem"onclick="friendsPage.style.display='none'; contactsPage.style.display='block'; inboxPage.style.display='none'">🏠</div>
+  <div id="openFriendsF" onclick="openFriends()" style="position: relative;">
+    🎁 Likes
+    <span id="interestsBadgeF">0</span>
+  </div>
+  
+  <div id="openInboxF" onclick="openInbox()" style="position: relative;">
+    📩 Inbox
+    <span id="inboxBadgeF">0</span>
+  </div>
   <a href="#">🧑‍🤝‍🧑 Rooms</a>
 </div>
 
 <div class="drawer" id="drawerF">
   <h2>Settings</h2>
-  <button onclick="{window.location.href='/pages/personalInfo.html'}">Profile</button>
+  <button onclick="{window.location.href='/pages/profileCentre.html'}">Profile Centre</button>
   <button onclick="{window.location.href='/pages/account.html'}">Account</button>
-  <button >Private Policies</button>
-  <button onclick="window.location.href='/pages/home.html'">Logout</button>
+  <button id="openPolicyF"   onclick="setupModal('openPolicy','PrivateInfo');">Private Policies</button>
+  <button id="openAboutUsF"   onclick="setupModal('openAboutUs','aboutUs')">About Us</button>
+  <button onclick="logout()">Logout 🔐</button>
+</div>
+</div>
+
+<!--Inbox Page-->
+<div id="inboxPage" style="display: none">
+<div class="top-bar-cont">
+  <div class="menu-btn" id="menuBtnI" onclick="openMenu()">☰</div>
+  <div class="title" id="contTitleI">Chats</div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInputI" placeholder="Global Search...">
+</div>
+
+<div id="inboxList"></div>
+
+<div class="bottom-bar-cont">
+  <div style="font-size: 2rem"onclick="friendsPage.style.display='none'; contactsPage.style.display='block'; inboxPage.style.display='none'">🏠</div>
+  <div id="openFriendsI" onclick="openFriends()" style="position: relative;">
+    🎁 Likes
+    <span id="interestsBadgeI">0</span>
+  </div>
+  <div id="openInboxI" onclick="openInbox()" style="position: relative;">
+    📩 Inbox
+    <span id="inboxBadgeI">0</span>
+  </div>
+  
+  <a href="#">🧑‍🤝‍🧑 Rooms</a>
+</div>
+
+<div class="drawer" id="drawerI">
+  <h2>Settings</h2>
+  <button onclick="{window.location.href='/pages/profileCentre.html'}">Profile Centre</button>
+  <button onclick="{window.location.href='/pages/account.html'}">Account</button>
+  <button id="openPolicyI"   onclick="setupModal('openPolicy','PrivateInfo');">Private Policies</button>
+  <button id="openAboutUsI"   onclick="setupModal('openAboutUs','aboutUs')">About Us</button>
+  <button onclick="logout()">Logout 🔐</button>
 </div>
 </div>
 
@@ -269,7 +320,7 @@
 
       <p style="font-size:1.1rem; margin-bottom:20px;">
         Please share the link with your friends to grow Unity’s global community:
-        <a href="https://express-app-web.onrender.com/" style="color:#00c6ff; text-decoration:underline;">https://express-app-web.onrender.com/</a>
+        <a href="https://unity-developers.onrender.com/" style="color:#00c6ff; text-decoration:underline;">https://express-app-web.onrender.com/</a>
       </p>
 
       <p style="text-align:center; font-size:1rem; color:#aaa;">

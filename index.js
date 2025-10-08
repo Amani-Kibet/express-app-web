@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const http = require("http");
 const { Server } = require("socket.io");
+const axios= require("axios");
+const fs= require("fs");
+const FormData= require("form-data");
 
 const app = express();
 const server = http.createServer(app);
@@ -32,27 +35,68 @@ let labels1 = new mongoose.Schema({
   email: String,
   age: Number,
   gender: String,
+  gallery: [String] // 👈 array of URLs for uploaded images
 });
+
 let contacts= mongoose.model("User Contacts", labels1)
 
-let labels2= new mongoose.Schema({sender: String, receiver: String, message: String, time: String})
-let messages= mongoose.model("Messages", labels2)
-let storage1= multer.diskStorage({
-  destination: (req, file, cb)=>{
-    cb(null, "pictures/")
-  },
-  filename: (req, file, cb)=>{
-    cb(null, `${new Date().getMinutes()}-${file.originalname}`)
-  }
-})
+let labels2= new mongoose.Schema({
+  sender: String,
+  receiver: String,
+  message: String,
+  time: String,
+  read: { type: Boolean, default: false } // new field
+});
 
-filex= multer({storage: storage1})
-app.post("/sign/path1", filex.single("image"), (req, res)=>{
-  let json= JSON.parse(req.body.json)
-  let user= new contacts({name: json.name, phone: json.phone, password: json.pass, piclink: `${new Date().getMinutes()}-${req.file.originalname}`, dob: json.dob, country: `${json.country}`, county: `${json.county}`, label: `${json.label}`, friends: ""})
-  user.save()
-  res.json({feedback: `${json.name}  Received and Saved✅`})
-})
+let messages= mongoose.model("Messages", labels2)
+
+const filex = multer({ dest: "uploads/" });
+const IMGBB_API_KEY = "60674b27502af3f803a73df6524b810e";
+
+app.post("/sign/path1", filex.single("image"), async (req, res) => {
+  try {
+    let json = JSON.parse(req.body.json);
+
+    // Read the file and convert to base64
+    const imageFile = fs.readFileSync(req.file.path, { encoding: "base64" });
+
+    // Prepare form for ImgBB
+    const form = new FormData();
+    form.append("image", imageFile);
+    form.append("key", IMGBB_API_KEY);
+
+    // Upload to ImgBB
+    const response = await axios.post("https://api.imgbb.com/1/upload", form, {
+      headers: form.getHeaders(),
+    });
+
+    // Delete local file after upload
+    fs.unlinkSync(req.file.path);
+
+    // Get ImgBB URL
+    const imgUrl = response.data.data.url;
+
+    // Save to your database
+    let user = new contacts({
+      name: json.name,
+      phone: json.phone,
+      password: json.pass,
+      piclink: imgUrl,  // <-- ImgBB URL here
+      dob: json.dob,
+      country: json.country,
+      county: json.county,
+      label: json.label,
+      friends: ""
+    });
+
+    await user.save();
+
+    res.json({ feedback: `${json.name} Received and Saved✅`, imgUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Upload failed ❌");
+  }
+});
 
 app.post("/chat/path1", async (req, res)=>{
   let arr1= await contacts.find({phone: req.body.phone1, password: req.body.pass});
@@ -189,6 +233,124 @@ app.post("/friends/list", async (req, res) => {
     }
 });
 
+
+app.post("/inbox", async (req, res) => {
+  const phone = req.body.phone;
+
+  // Get all messages sent to this user
+  const msgs = await messages.find({ receiver: phone });
+
+  // Group by sender
+  const inbox = {};
+  msgs.forEach(msg => {
+    if (!inbox[msg.sender]) {
+      inbox[msg.sender] = {
+        sender: msg.sender,
+        count: 0,
+        lastMessage: msg.message,
+        lastTime: msg.time
+      };
+    }
+
+    // Always update last message/time to the latest
+    if (new Date(msg.time) > new Date(inbox[msg.sender].lastTime)) {
+      inbox[msg.sender].lastMessage = msg.message;
+      inbox[msg.sender].lastTime = msg.time;
+    }
+
+    // Count unread messages
+    if (!msg.read) inbox[msg.sender].count++;
+  });
+
+  // Get sender info
+  let result = await Promise.all(
+    Object.values(inbox).map(async item => {
+      const user = await contacts.findOne({ phone: item.sender });
+      return {
+        phone: item.sender,
+        name: user.name,
+        piclink: user.piclink,
+        lastMessage: item.lastMessage,
+        lastTime: item.lastTime,
+        unreadCount: item.count
+      };
+    })
+  );
+
+  // 🧩 SORT: Unread first, then by latest message time
+  result.sort((a, b) => {
+    // 1️⃣ Unread chats first
+    if (a.unreadCount > 0 && b.unreadCount === 0) return -1;
+    if (a.unreadCount === 0 && b.unreadCount > 0) return 1;
+
+    // 2️⃣ Then by latest message time
+    return new Date(b.lastTime) - new Date(a.lastTime);
+  });
+
+  res.json({ inbox: result });
+});
+
+
+app.post("/markAsRead", async (req, res) => {
+  const { userPhone, senderPhone } = req.body;
+
+  try {
+    await messages.updateMany(
+      { receiver: userPhone, sender: senderPhone, read: false },
+      { $set: { read: true } }
+    );
+
+    res.json({ success: true, message: "Messages marked as read" });
+  } catch (error) {
+    console.error("Error marking messages as read:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+app.post("/update-profile", filex.array("photos", 6), async (req, res) => {
+  try {
+    const { name, phone, email, age, gender, county } = req.body;
+
+    // find the user first
+    const user = await contacts.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found ❌" });
+
+    // upload all selected images to ImgBB
+    const uploadedUrls = [];
+    for (let i = 0; i < req.files.length; i++) {
+      const imageFile = fs.readFileSync(req.files[i].path, { encoding: "base64" });
+      const form = new FormData();
+      form.append("image", imageFile);
+      form.append("key", IMGBB_API_KEY);
+
+      const response = await axios.post("https://api.imgbb.com/1/upload", form, {
+        headers: form.getHeaders(),
+      });
+
+      // clean up temp files
+      fs.unlinkSync(req.files[i].path);
+
+      uploadedUrls.push(response.data.data.url);
+    }
+
+    // Update user info & gallery
+    user.name = name;
+    user.email = email;
+    user.age = age;
+    user.gender = gender;
+    user.county = county;
+    // Add to gallery (append new images)
+    user.gallery = [...(user.gallery || []), ...uploadedUrls];
+
+    await user.save();
+
+    res.json({ message: "✅ Profile updated successfully!", uploadedCount: uploadedUrls.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "❌ Failed to update profile" });
+  }
+});
 
 
 

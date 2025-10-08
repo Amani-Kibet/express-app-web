@@ -12,45 +12,66 @@ let searchInput = document.getElementById("searchInput");
 let ints=0;
 
 async function fetchAndRenderFriends() {
-  if(!info1.phone) return; // make sure user is logged in
-    try {
-        const res = await fetch("/friends/list", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ phone1: info1.phone })
-        });
+  if (!info1.phone) return; // make sure user is logged in
 
-        const data = await res.json();
-        const friends = data.friends || [];
+  try {
+    const res = await fetch("/friends/list", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone1: info1.phone })
+    });
 
-        userListF.innerHTML = ""; // clear old list
+    const data = await res.json();
+    const friends = data.friends || [];
 
-        friends.forEach(friend => {
-            const div = document.createElement("div");
-            div.classList.add("user");
+    const userListF = document.getElementById("userListF");
+    userListF.innerHTML = ""; // clear old list
 
-            div.innerHTML = `
-                <div class="user-pic" style="background-image:url('/pictures/${friend.piclink}')"></div>
-                <div class="user-info">
-                    <h2>${friend.name}</h2>
-                    <p>${friend.label || ""}</p>
-                </div>
-            `;
+    // ✅ Display all friends
+    friends.forEach(friend => {
+      const div = document.createElement("div");
+      div.classList.add("user");
 
-            // Optional: click to open chat
-            div.addEventListener("click", () => openChat(friend));
+      div.innerHTML = `
+        <div class="user-pic" style="background-image:url(${friend.piclink})"></div>
+        <div class="user-info">
+          <h2>${friend.name}</h2>
+          <p>${friend.label || ""}</p>
+        </div>
+      `;
 
-            userListF.appendChild(div);
-        });
+      // Click to open chat
+      div.addEventListener("click", () => openChat(friend));
+      userListF.appendChild(div);
+    });
 
-        const intsEl = document.getElementById("ints");
-  if(intsEl) intsEl.textContent = friends.length;
-    } catch (err) {
-        console.error("Error fetching friends:", err);
-    }
+    // ✅ Update interests count in top section
+    const intsEl = document.getElementById("ints");
+    if (intsEl) intsEl.textContent = friends.length;
 
-    //End of fetchAndRenderFriend
+    // ✅ Update all Interests badges (main + Friends + Inbox pages)
+    const badges = [
+      document.getElementById("interestsBadge"),
+      document.getElementById("interestsBadgeF"),
+      document.getElementById("interestsBadgeI")
+    ].filter(Boolean); // ignore missing ones
+
+    badges.forEach(badge => {
+      if (friends.length > 0) {
+        badge.innerText = friends.length;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    });
+
+  } catch (err) {
+    console.error("❌ Error fetching friends:", err);
+  }
+
+  // End of fetchAndRenderFriends()
 }
+
 
 function autoLogin() {
   const savedPhone = localStorage.getItem("phone");
@@ -144,7 +165,7 @@ submit.addEventListener("click", async (event) => {
               div.classList.add("user");
               div.innerHTML = `
               <div class="user-left">
-                <div class="user-pic" style="background-image:url('/pictures/${u.piclink}')"></div>
+                <div class="user-pic" style="background-image:url(${u.piclink})"></div>
                 <div class="user-info">
                   <h2>${u.name}</h2>
                   <p>${u.label}</p>
@@ -223,13 +244,19 @@ submit.addEventListener("click", async (event) => {
             });
       
             div.innerHTML = `
-              <div class="user-pic" style="background-image:url('/pictures/${u.piclink}')"></div>
+            <div class="user-pic" style="background-image:url(${u.piclink})"></div>
               <div class="user-info">
                 <h2>${u.name}</h2>
                 <p>${u.label}</p>
               </div>
             `;
-      
+      const picDiv = div.querySelector('.user-pic');
+picDiv.addEventListener("click", (e) => {
+  e.stopPropagation();
+  viewProfile(u);
+});
+
+
             div.addEventListener("click", () => {
              info2= u;
               openChat(u);
@@ -254,19 +281,235 @@ submit.addEventListener("click", async (event) => {
           updateUsers(everyone.filter(u=>u.name.toLowerCase().includes(filter)
         ));
       });
-
-      document.getElementById("openFriends").addEventListener("click", () => {
-        contactsPage.style.display = "none";
-        friendsPage.style.display = "block";
-        fetchAndRenderFriends();
-    });
   
         // End of Else User! null
     }
 
 fetchAndRenderFriends();
+fetchAndRenderInbox();
 
 //End of Submit Event
 });
 
+function updateInboxBadge(inboxData) {
+  // find all badge elements across pages
+  const badges = [
+    document.getElementById("inboxBadge"),   // contacts page
+    document.getElementById("inboxBadgeF"),  // friends page
+    document.getElementById("inboxBadgeI")   // inbox page
+  ].filter(Boolean); // remove null ones
+
+  if (badges.length === 0) return; // no badges found
+
+  // Count unread chats
+  const unreadContacts = inboxData.filter(item => item.unreadCount > 0).length;
+
+  // Update all visible badges
+  badges.forEach(badge => {
+    if (unreadContacts > 0) {
+      badge.innerText = unreadContacts;
+      badge.style.display = "inline-block";
+    } else {
+      badge.style.display = "none";
+    }
+  });
+}
+
+
+async function fetchAndRenderInbox() {
+  if (!info1.phone) return; // ensure user is logged in
+
+  try {
+    const res = await fetch("/inbox", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: info1.phone })
+    });
+
+    const data = await res.json();
+    let inbox = data.inbox || [];
+
+    // ✅ Sort unread chats to appear on top (like WhatsApp)
+    inbox.sort((a, b) => {
+      if (a.unreadCount > 0 && b.unreadCount === 0) return -1;
+      if (a.unreadCount === 0 && b.unreadCount > 0) return 1;
+      return new Date(b.lastTime) - new Date(a.lastTime);
+    });
+
+    const inboxContainer = document.getElementById("inboxList");
+    inboxContainer.innerHTML = "";
+
+    // ✅ Count how many chats have unread messages (not total messages)
+    let unreadChats = 0;
+
+    inbox.forEach(item => {
+      if (item.unreadCount > 0) unreadChats++; // ✅ count contact with unread msgs
+
+      // ✅ Bold + green name if unread
+      const nameStyle = item.unreadCount > 0
+        ? "font-weight:900; color:#25D366;"
+        : "font-weight:normal; color:#000;";
+
+      const lastMsgStyle = item.unreadCount > 0
+        ? "font-weight:bold; color:#111;"
+        : "font-weight:normal; color:#555;";
+
+      const div = document.createElement("div");
+      div.classList.add("user");
+
+      div.innerHTML = `
+        <div class="user-pic" style="background-image:url(${item.piclink});"></div>
+        <div class="inbox-info">
+          <div class="inbox-name-time">
+            <h3 class="chat-name" style="${nameStyle}">${item.name}</h3>
+            <p class="chat-time">${item.lastTime || ""}</p>
+          </div>
+          <p class="chat-message" style="${lastMsgStyle}">
+            ${item.lastMessage || ""}
+          </p>
+        </div>
+        ${
+          item.unreadCount > 0
+            ? `<div class="unread-badge">${item.unreadCount}</div>`
+            : ""
+        }
+      `;
+
+      // ✅ On click → mark as read + open chat + refresh inbox
+      div.addEventListener("click", async () => {
+        await fetch("/markAsRead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userPhone: info1.phone,
+            senderPhone: item.phone,
+          }),
+        });
+
+        openChat(item);
+        fetchAndRenderInbox(); // refresh badges + inbox instantly
+      });
+
+      inboxContainer.appendChild(div);
+    });
+
+    // ✅ Update unread chat badges (not total msgs)
+    const badges = [
+      document.getElementById("inboxBadge"),
+      document.getElementById("inboxBadgeF"),
+      document.getElementById("inboxBadgeI")
+    ].filter(Boolean);
+
+    badges.forEach(badge => {
+      if (unreadChats > 0) {
+        badge.innerText = unreadChats;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    });
+
+  } catch (err) {
+    console.error("❌ Error fetching inbox:", err);
+  }
+}
+
+
+
+
+function openFriends() {
+  contactsPage.style.display = "none";
+  inboxPage.style.display = "none";
+  friendsPage.style.display = "block";
+  fetchAndRenderFriends();
+};
+
+function openInbox() {
+  contactsPage.style.display = "none";
+  friendsPage.style.display = "none";
+  inboxPage.style.display = "block";
+  fetchAndRenderInbox(); // 🔥 fetch messages when inbox opens
+}
+
+
+// Global function for viewing profiles
+function viewProfile(u) {
+  // Remove previous popup if open
+  const existingPopup = document.querySelector('.popupV');
+  if (existingPopup) existingPopup.remove();
+
+  // ✅ Make sure gallery exists and has at least 6 slots
+  let gallery = u.gallery && u.gallery.length > 0 ? u.gallery : [];
+  while (gallery.length < 6) {
+    gallery.push("/assets/no-pic.png");
+  }
+
+  // Create popup container
+  const popup = document.createElement('div');
+  popup.className = 'popupV';
+
+  // Create popup content
+  const popupContent = document.createElement('div');
+  popupContent.className = 'popup-content';
+
+  // Close button
+  const closeBtn = document.createElement('span');
+  closeBtn.className = 'close-btnV';
+  closeBtn.innerHTML = '&times;';
+  closeBtn.addEventListener('click', () => popup.remove());
+
+  // Carousel container
+  const carouselContainer = document.createElement('div');
+  carouselContainer.className = 'carousel-container';
+
+  // ✅ Add real images first
+  gallery.forEach(url => {
+    const img = document.createElement('img');
+    img.src = url || "/assets/no-pic.png";
+    img.className = 'carousel-item';
+    carouselContainer.appendChild(img);
+  });
+
+  // Info grid
+  const infoGrid = document.createElement('div');
+  infoGrid.className = 'info-grid';
+  const fields = ["Name", "Age", "Gender", "County", "Country", "Phone", "Email", "Hobby"];
+  fields.forEach(f => {
+    const div = document.createElement('div');
+    const span = document.createElement('span');
+    span.textContent = f + ": ";
+    const p = document.createElement('p');
+    p.textContent = u[f.toLowerCase()] || "N/A";
+    div.appendChild(span);
+    div.appendChild(p);
+    infoGrid.appendChild(div);
+  });
+
+  // Combine everything
+  popupContent.appendChild(closeBtn);
+  popupContent.appendChild(carouselContainer);
+  popupContent.appendChild(infoGrid);
+  popup.appendChild(popupContent);
+  document.body.appendChild(popup);
+
+  popup.style.display = 'flex';
+
+  // Smooth carousel scaling
+  const items = carouselContainer.querySelectorAll('.carousel-item');
+  function updateCarousel() {
+    const center = carouselContainer.offsetWidth / 2;
+    items.forEach(item => {
+      const itemCenter = item.offsetLeft + item.offsetWidth / 2 - carouselContainer.scrollLeft;
+      const distance = Math.abs(center - itemCenter);
+      const scale = Math.max(0.75, 1 - distance / 400);
+      item.style.transform = `scale(${scale})`;
+      item.style.filter = `brightness(${scale})`;
+    });
+  }
+  carouselContainer.addEventListener('scroll', () => requestAnimationFrame(updateCarousel));
+  updateCarousel();
+
+  // Close popup if clicking outside
+  popup.addEventListener('click', e => { if (e.target === popup) popup.remove(); });
+}
 
