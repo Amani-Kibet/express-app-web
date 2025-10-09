@@ -12,12 +12,14 @@ const bcrypt = require("bcrypt");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+const path = require('path');
 
 app.use(cors())
 app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 app.use("/sounds", express.static("sounds"))
+
 
 mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatabase?retryWrites=true&w=majority")
 .then(()=> console.log("Database Connected Successfully"))
