@@ -47,7 +47,7 @@ async function fetchAndRenderFriends() {
 
     // ✅ Update interests count in top section
     const intsEl = document.getElementById("ints");
-    if (intsEl) intsEl.innerHTML = `${Math.floor(Math.random()*100)}`;
+    if (intsEl) intsEl.textContent = friends.length;
 
     // ✅ Update all Interests badges (main + Friends + Inbox pages)
     const badges = [
@@ -147,7 +147,7 @@ submit.addEventListener("click", async (event) => {
         contTitle.innerHTML = `💡 ${info1.name}
         <div id="intC">
           <h4 style="font-size:15px;color:yellow">
-            ⭐Points: <h5 style="color: red" id="ints">0</h5>
+            ⭐ Points: <h5 style="color: red" id="ints">26</h5>
           </h4>
           </div></div>`;
           

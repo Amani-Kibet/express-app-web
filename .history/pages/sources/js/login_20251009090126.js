@@ -185,6 +185,7 @@ submit.addEventListener("click", async (event) => {
                   fr.style.background = "red";
                   updateFriends(u, "add");
                 } else {
+                  new Audio("/sounds/receive.mp3").play();
                   fr.innerHTML = "Interested";
                   fr.style.background = "rgb(14,160,14)";
                   updateFriends(u, "remove");

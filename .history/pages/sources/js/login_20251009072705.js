@@ -147,7 +147,7 @@ submit.addEventListener("click", async (event) => {
         contTitle.innerHTML = `💡 ${info1.name}
         <div id="intC">
           <h4 style="font-size:15px;color:yellow">
-            ⭐Points: <h5 style="color: red" id="ints">0</h5>
+            ⭐Points: <h5 style="color: red" id="ints">${0}</h5>
           </h4>
           </div></div>`;
           

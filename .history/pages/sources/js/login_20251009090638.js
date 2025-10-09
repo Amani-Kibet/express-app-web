@@ -179,6 +179,7 @@ submit.addEventListener("click", async (event) => {
               fr.style.background = "red";
         
               fr.addEventListener("click", (e) => {
+                new Audio("/sounds/like.mp3").play();
                 e.stopPropagation();
                 if (fr.innerHTML === "Interested") {
                   fr.innerHTML = "Remove";

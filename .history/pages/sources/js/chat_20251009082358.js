@@ -3,6 +3,11 @@ let sendbt= document.getElementById("sendbtn");
 let messageBox= document.getElementById("message");
 let chat= document.getElementById("chat");
 
+let sounds= {
+  receive: new Audio("/sounds/receive.wav"),
+  send: new Audio("/sounds/send.wav"),
+  like: new Audio("/sounds/like3.mp")
+}
 let page = io();
 let popup = document.getElementById("popup");
 let timeout;
@@ -72,10 +77,10 @@ async function openChat(info2) {
 
           if (msg.type === "sent") {
             bubble.className = "chat-bubble chat-right";
-            bubble.innerHTML = `${msg.message} (${msg.time})`;
+            bubble.textContent = `${msg.message} (${msg.time})`;
           } else {
             bubble.className = "chat-bubble chat-left";
-            bubble.innerHTML = `${msg.message} (${msg.time})`;
+            bubble.textContent = `${msg.message} (${msg.time})`;
           }
 
           chat.appendChild(bubble);
@@ -126,34 +131,18 @@ async function openChat(info2) {
 
   function typeMessage(text, container) {
     container.style.whiteSpace = "pre-wrap";
-    container.innerHTML = ""; // clear previous
     let i = 0;
-    let current = "";
-    let insideTag = false;
-  
     const interval = setInterval(() => {
-      const char = text[i];
-      current += char;
-  
-      if (char === "<") insideTag = true;
-      if (char === ">") insideTag = false;
-  
-      // When not inside an HTML tag, update the display
-      if (!insideTag || char === ">") {
-        container.innerHTML = current;
-      }
-  
+      container.innerHTML += text.charAt(i);
       i++;
-      if (i >= text.length) {
-        clearInterval(interval);
-        container.innerHTML = text; // make sure full HTML rendered
-      }
-    }, 30); // you can change speed here
+      if (i === text.length) clearInterval(interval);
+    }, 50);
+
+    //End of typeMessage()
   }
-  
 
   function send(){
-    new Audio("/sounds/send.mp3").play()
+    sounds.send.play()
     const input = document.getElementById("message");
     const text = input.value;
     if (text === "") return;
@@ -190,7 +179,7 @@ async function openChat(info2) {
             chat.scrollTop = chat.scrollHeight;
       
             setTimeout(() => {
-              new Audio("/sounds/receive.mp3").play()
+              sounds.receive.play()
               typing.remove();
   
       const bubble = document.createElement("div");

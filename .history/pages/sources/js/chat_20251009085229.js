@@ -72,10 +72,10 @@ async function openChat(info2) {
 
           if (msg.type === "sent") {
             bubble.className = "chat-bubble chat-right";
-            bubble.innerHTML = `${msg.message} (${msg.time})`;
+            bubble.textContent = `${msg.message} (${msg.time})`;
           } else {
             bubble.className = "chat-bubble chat-left";
-            bubble.innerHTML = `${msg.message} (${msg.time})`;
+            bubble.textContent = `${msg.message} (${msg.time})`;
           }
 
           chat.appendChild(bubble);
@@ -126,31 +126,15 @@ async function openChat(info2) {
 
   function typeMessage(text, container) {
     container.style.whiteSpace = "pre-wrap";
-    container.innerHTML = ""; // clear previous
     let i = 0;
-    let current = "";
-    let insideTag = false;
-  
     const interval = setInterval(() => {
-      const char = text[i];
-      current += char;
-  
-      if (char === "<") insideTag = true;
-      if (char === ">") insideTag = false;
-  
-      // When not inside an HTML tag, update the display
-      if (!insideTag || char === ">") {
-        container.innerHTML = current;
-      }
-  
+      container.innerHTML += text.charAt(i);
       i++;
-      if (i >= text.length) {
-        clearInterval(interval);
-        container.innerHTML = text; // make sure full HTML rendered
-      }
-    }, 30); // you can change speed here
+      if (i === text.length) clearInterval(interval);
+    }, 50);
+
+    //End of typeMessage()
   }
-  
 
   function send(){
     new Audio("/sounds/send.mp3").play()

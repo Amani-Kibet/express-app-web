@@ -10,7 +10,9 @@ let info2={};
 let everyone=[];
 let searchInput = document.getElementById("searchInput");
 let ints=0;
-
+let sounds= {
+  like: new Audio("/sounds/like.mp3")
+}
 async function fetchAndRenderFriends() {
   if (!info1.phone) return; // make sure user is logged in
 
@@ -181,6 +183,7 @@ submit.addEventListener("click", async (event) => {
               fr.addEventListener("click", (e) => {
                 e.stopPropagation();
                 if (fr.innerHTML === "Interested") {
+                  sounds.like.play()
                   fr.innerHTML = "Remove";
                   fr.style.background = "red";
                   updateFriends(u, "add");

@@ -100,6 +100,7 @@ async function obtainEveryone() {
   //End of obtainEveryone
 }
 obtainEveryone()
+console.log("")
 
 submit.addEventListener("click", async (event) => {
     event.preventDefault();

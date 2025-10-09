@@ -181,6 +181,7 @@ submit.addEventListener("click", async (event) => {
               fr.addEventListener("click", (e) => {
                 e.stopPropagation();
                 if (fr.innerHTML === "Interested") {
+                  
                   fr.innerHTML = "Remove";
                   fr.style.background = "red";
                   updateFriends(u, "add");
