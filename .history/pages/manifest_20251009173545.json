@@ -1,7 +1,7 @@
 {
     "name": "Unity",
     "short_name": "Unity",
-    "start_url": "/pictures/icon1.png",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#1976d2",
