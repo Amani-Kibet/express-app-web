@@ -291,7 +291,6 @@ app.post("/inbox", async (req, res) => {
   res.json({ inbox: result });
 });
 
-
 app.post("/markAsRead", async (req, res) => {
   const { userPhone, senderPhone } = req.body;
 

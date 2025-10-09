@@ -306,8 +306,7 @@ async function openChat(info2) {
       function exit(){
         chatPage.style.display="none";
         contactsPage.style.display="block";
-        dropdown.style.display="none";
-        gifPopup.style.display = "none";
+        dropdown.style.display="none"
       }
 
 

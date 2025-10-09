@@ -8,65 +8,6 @@ let popup = document.getElementById("popup");
 let timeout;
 let inboxPage= document.getElementById("inboxPage");
 
-const gifPopup = document.getElementById("gifPopup");
-const gifBtn = document.getElementById("gifBtn");
-const gifList = document.getElementById("gifList");
-const closeGifBtn = document.getElementById("closeGifBtn");
-
-// Animated "HTML GIFs"
-const htmlGifs = [
-  `<div style="font-size:18px; color:#00ffcc; animation:pulse 1s infinite;">👋 Hello!</div>`,
-  `<div style="font-size:18px; color:#ff6b6b; animation:bounceG 1s infinite;">🎉 Welcome!</div>`,
-  `<div style="font-size:18px; color:#ffd700; animation:waveG 1.5s infinite;">👋 Goodbye!</div>`,
-  `<div style="font-size:18px; color:#a855f7; animation:spin 1s infinite;">💫 Wow!</div>`,
-  `<div style="font-size:18px; color:#00d084; animation:pulseG 1.2s infinite;">🙏 Thanks!</div>`,
-  `<div style="font-size:18px; color:#ff9f43; animation:bounceG 1.3s infinite;">🔥 Nice!</div>`,
-  `<div style="font-size:18px; color:#3b82f6; animation:wave 2s infinite;">💙 Cool!</div>`,
-  `<div style="font-size:18px; color:#e11d48; animation:spinG 1.5s infinite;">❤️ Love it!</div>`,
-  `<div style="font-size:18px; color:#10b981; animation:bounceG 1.2s infinite;">😎 Awesome!</div>`,
-  `<div style="font-size:18px; color:#6366f1; animation:pulseG 1.1s infinite;">👑 Respect!</div>`
-];
-
-// Toggle popup
-gifBtn.addEventListener("click", () => {
-  const isVisible = gifPopup.style.display === "block";
-  gifPopup.style.display = isVisible ? "none" : "block";
-  if (!isVisible && gifList.innerHTML === "") {
-    htmlGifs.forEach(html => {
-      const div = document.createElement("div");
-      div.innerHTML = html;
-      div.style.cursor = "pointer";
-      div.style.marginBottom = "10px";
-      div.addEventListener("click", () => {
-        sendGif(html);
-        gifPopup.style.display = "none";
-      });
-      gifList.appendChild(div);
-    });
-  }
-});
-
-// Close popup manually
-closeGifBtn.addEventListener("click", () => {
-  gifPopup.style.display = "none";
-});
-
-// Send GIF as message
-function sendGif(html) {
-  const bubble = document.createElement("div");
-  bubble.className = "chat-bubble chat-right";
-  bubble.innerHTML = html;
-  chat.appendChild(bubble);
-  chat.scrollTop = chat.scrollHeight;
-
-  page.emit("message", { 
-    from: info1.phone, 
-    to: info2.phone, 
-    text: html, 
-    fromName: info2.name 
-  });
-}
-
 
 async function openChat(info2) {
   let contactsPage = document.getElementById("contactsPage");
@@ -306,8 +247,7 @@ async function openChat(info2) {
       function exit(){
         chatPage.style.display="none";
         contactsPage.style.display="block";
-        dropdown.style.display="none";
-        gifPopup.style.display = "none";
+        dropdown.style.display="none"
       }
 
 

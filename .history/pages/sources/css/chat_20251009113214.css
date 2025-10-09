@@ -431,11 +431,16 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: #00bfff;
+  background: #00eaff, 0 0 20px #00bfff;
   color: white;
   border: none;
   cursor: pointer;
   transition: 0.3s ease;
+}
+
+#gifBtn:hover {
+  background: #555;
+  box-shadow: 0 0 10px #00eaff, 0 0 20px #00bfff;
 }
 
 #gifT{

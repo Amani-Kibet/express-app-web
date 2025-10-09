@@ -7,10 +7,6 @@
   <link rel="stylesheet" href="/pages/sources/css/login.css">
   <link rel="stylesheet" href="/pages/sources/css/chat.css">
   <link rel="stylesheet" href="/pages/sources/css/contacts.css">
-
-  <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#4CAF50">
-
   <style>
     * {
       margin: 0;
@@ -236,7 +232,7 @@
 
   <!-- Input + GIF -->
   <div class="chat-input" style="display:flex; align-items:center; gap:6px;">
-    <button id="gifBtn" style="font-size:1.4rem;">😂</button>
+    <button id="gifBtn" style="font-size:20px;">🎞️</button>
     <input type="text" id="message" placeholder="Type a message..." style="flex:1;" />
     <button id="sendbtn">➤</button>
   </div>
@@ -244,10 +240,19 @@
   <!-- GIF popup -->
   <div id="gifPopup">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <span id="gifT">
+      <span id="gifT" style="
+">
 ✨ GIF Stickers ✨
 </span>
-<button id="closeGifBtn"
+
+<style>
+@keyframes glowPulse {
+  from { text-shadow: 0 0 5px #00eaff, 0 0 10px #00bfff; }
+  to { text-shadow: 0 0 15px #00eaff, 0 0 25px #00bfff; }
+}
+</style>
+
+      <button id="closeGifBtn"
               title="Close">✖</button>
     </div>
   

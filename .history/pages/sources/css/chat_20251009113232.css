@@ -438,6 +438,11 @@
   transition: 0.3s ease;
 }
 
+#gifBtn:hover {
+  background: #555;
+  box-shadow: 0 0 10px #00eaff, 0 0 20px #00bfff;
+}
+
 #gifT{
   
   font-size:18px;

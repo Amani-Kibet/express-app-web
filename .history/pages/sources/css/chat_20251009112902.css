@@ -422,22 +422,12 @@
   cursor:pointer;
   transition:0.3s;
 }
-#gifBtn {
+#gifBtn{
   border-radius: 15%;
+  text-align: centre;
   width: 8%;
-  height: 4%;
-  font-size: 1.4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: #00bfff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s ease;
+  height: 8%;
 }
-
 #gifT{
   
   font-size:18px;

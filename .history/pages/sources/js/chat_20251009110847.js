@@ -16,15 +16,15 @@ const closeGifBtn = document.getElementById("closeGifBtn");
 // Animated "HTML GIFs"
 const htmlGifs = [
   `<div style="font-size:18px; color:#00ffcc; animation:pulse 1s infinite;">👋 Hello!</div>`,
-  `<div style="font-size:18px; color:#ff6b6b; animation:bounceG 1s infinite;">🎉 Welcome!</div>`,
-  `<div style="font-size:18px; color:#ffd700; animation:waveG 1.5s infinite;">👋 Goodbye!</div>`,
+  `<div style="font-size:18px; color:#ff6b6b; animation:bounce 1s infinite;">🎉 Welcome!</div>`,
+  `<div style="font-size:18px; color:#ffd700; animation:wave 1.5s infinite;">👋 Goodbye!</div>`,
   `<div style="font-size:18px; color:#a855f7; animation:spin 1s infinite;">💫 Wow!</div>`,
-  `<div style="font-size:18px; color:#00d084; animation:pulseG 1.2s infinite;">🙏 Thanks!</div>`,
-  `<div style="font-size:18px; color:#ff9f43; animation:bounceG 1.3s infinite;">🔥 Nice!</div>`,
+  `<div style="font-size:18px; color:#00d084; animation:pulse 1.2s infinite;">🙏 Thanks!</div>`,
+  `<div style="font-size:18px; color:#ff9f43; animation:bounce 1.3s infinite;">🔥 Nice!</div>`,
   `<div style="font-size:18px; color:#3b82f6; animation:wave 2s infinite;">💙 Cool!</div>`,
-  `<div style="font-size:18px; color:#e11d48; animation:spinG 1.5s infinite;">❤️ Love it!</div>`,
-  `<div style="font-size:18px; color:#10b981; animation:bounceG 1.2s infinite;">😎 Awesome!</div>`,
-  `<div style="font-size:18px; color:#6366f1; animation:pulseG 1.1s infinite;">👑 Respect!</div>`
+  `<div style="font-size:18px; color:#e11d48; animation:spin 1.5s infinite;">❤️ Love it!</div>`,
+  `<div style="font-size:18px; color:#10b981; animation:bounce 1.2s infinite;">😎 Awesome!</div>`,
+  `<div style="font-size:18px; color:#6366f1; animation:pulse 1.1s infinite;">👑 Respect!</div>`
 ];
 
 // Toggle popup
@@ -306,8 +306,7 @@ async function openChat(info2) {
       function exit(){
         chatPage.style.display="none";
         contactsPage.style.display="block";
-        dropdown.style.display="none";
-        gifPopup.style.display = "none";
+        dropdown.style.display="none"
       }
 
 

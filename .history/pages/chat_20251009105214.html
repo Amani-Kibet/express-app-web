@@ -7,10 +7,6 @@
   <link rel="stylesheet" href="/pages/sources/css/login.css">
   <link rel="stylesheet" href="/pages/sources/css/chat.css">
   <link rel="stylesheet" href="/pages/sources/css/contacts.css">
-
-  <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#4CAF50">
-
   <style>
     * {
       margin: 0;
@@ -210,54 +206,6 @@
 </div>
 </div>
 
-<!-- Chat Page -->
-<div id="chatPage" style="display:none; position:relative; height:100%;">
-
-  <div class="top-bar">
-    <div style="display: flex; align-items: center;">
-      <div class="settings-btn" id="settings">☰</div>
-      <div class="user-info">
-        <h2 id="nameinfo"></h2>
-        <p id="phoneinfo"></p>
-      </div>
-    </div>
-    <div id="pic"></div>
-    <div class="dropdown" id="dropdown">
-      <button onclick="toggleDarkMode()">🌙 Dark Theme</button>
-      <button onclick="openModal()">⚙️ Background</button>
-      <button id="connected">🛜 See who is connected</button>
-      <button id="profileInfoBtn">👤 Profile Info</button>
-      <button onclick="exit()">❌ Exit chat</button>
-    </div>
-  </div>
-
-  <!-- Chat container -->
-  <div class="chat-container" id="chat"></div>
-
-  <!-- Input + GIF -->
-  <div class="chat-input" style="display:flex; align-items:center; gap:6px;">
-    <button id="gifBtn" style="font-size:1.4rem;">😂</button>
-    <input type="text" id="message" placeholder="Type a message..." style="flex:1;" />
-    <button id="sendbtn">➤</button>
-  </div>
-
-  <!-- GIF popup -->
-  <div id="gifPopup">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <span id="gifT">
-✨ GIF Stickers ✨
-</span>
-<button id="closeGifBtn"
-              title="Close">✖</button>
-    </div>
-  
-    <div id="gifList"></div>
-  </div>
-  
-
-</div>
-
-  
 
   <!-- Settings Modal -->
   <div class="modal" id="modal">
