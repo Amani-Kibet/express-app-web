@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="/pages/sources/css/chat.css">
   <link rel="stylesheet" href="/pages/sources/css/contacts.css">
 
-  <link rel="manifest" href="/pages/manifest.json">
-<meta name="theme-color" content="#4CAF50">
-
+  <link rel="manifest" href="/pages/manifest.json" />
   <style>
     * {
       margin: 0;
@@ -59,6 +57,10 @@
     .user-info p { font-size:0.8rem; }
     .top-bar .title { font-size:1.1rem; }
   }
+  #installBtn{
+    display:none;
+    margin-top:12px
+  }
   </style>
 </head>
 <body>
@@ -70,7 +72,6 @@
     </div>
   <div id="board">
     <button id="installBtn">Install App</button>
-    
     <form id="form">
     <h2>Login</h2>
     <input required type="number" class="inputs" id="phoneI" placeholder="Enter Phone Number">
@@ -364,6 +365,45 @@
 <script src="/pages/sources/js/contacts.js"></script>
 <script src="/pages/sources/js/chat.js"></script>
   <script>
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/pages/service-worker.js')
+        .then(reg => {
+          console.log('SW registered', reg);
+        }).catch(err => {
+          console.error('SW register failed', err);
+        });
+    } else {
+      document.getElementById('pwastate').textContent = 'no service worker support';
+    }
+
+    // beforeinstallprompt handling
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome's default mini-infobar
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show our install button
+      installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      console.log('userChoice', choice);
+      // hide the button after user responds
+      installBtn.style.display = 'none';
+      deferredPrompt = null;
+    });
+
+    // Optional: track appinstalled event
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA installed!');
+      document.getElementById('pwastate').textContent = 'installed';
+    });
 
     function setupModal(triggerId, modalId) {
   const trigger = document.getElementById(triggerId);

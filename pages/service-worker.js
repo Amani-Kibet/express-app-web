@@ -1,67 +1,45 @@
-// Service Worker for Express PWA
-const cacheName = 'express-app-cache-v1';
-const assetsToCache = [
+const CACHE_NAME = 'express-pwa-cache-v1';
+const ASSETS = [
   '/',
-  '/index.html',
-  '/styles.css',
-  '/main.js',
-  '/offline.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/pages/chat.html',
+  '/pages/offline.html',    // optional
 ];
 
-// Install Event – caches all assets
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Installing...');
   event.waitUntil(
-    caches.open(cacheName)
-      .then(cache => {
-        console.log('[Service Worker] Caching all assets');
-        return cache.addAll(assetsToCache);
-      })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activate Event – cleans up old caches
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] Activating...');
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== cacheName).map(key => caches.delete(key))
-      );
-    })
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch Event – serves cached assets, network fallback, offline page
 self.addEventListener('fetch', event => {
+  // network first for navigation, fallback to cache/offline
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() =>
+        caches.match('/pages/offline.html')
+      )
+    );
+    return;
+  }
+
+  // for other requests, try cache then network
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        // Serve cached file
-        return cachedResponse;
-      }
-      // Fetch from network and cache dynamically
-      return fetch(event.request)
-        .then(networkResponse => {
-          return caches.open(cacheName).then(cache => {
-            // Only cache GET requests
-            if (event.request.method === 'GET') {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          });
-        })
-        .catch(() => {
-          // Offline fallback
-          if (event.request.mode === 'navigate' || event.request.destination === 'document') {
-            return caches.match('/pages/offline.html');
-          }
-        });
-    })
+    caches.match(event.request).then(cached => cached || fetch(event.request).then(resp => {
+      // optionally cache new requests
+      return caches.open(CACHE_NAME).then(cache => {
+        // cache.put(event.request, resp.clone()); // uncomment if you want runtime caching
+        return resp;
+      });
+    }))
   );
 });
