@@ -192,4 +192,44 @@ h2 {
   .starBtn:hover {
     transform: scale(1.2);
   }
+
+  #installBtn {
+    background: linear-gradient(45deg, #f131e1ff, #e22832ff);
+    color: white;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 18px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(0, 255, 200, 0.7);
+    animation: floaty 3s ease-in-out infinite, glowPulse 2s infinite alternate;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* Button hover effects */
+  #installBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(0, 255, 200, 0.9);
+  }
+
+  /* Floating animation */
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  /* Glowing pulse animation */
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 20px rgba(0, 255, 200, 0.6); }
+    100% { box-shadow: 0 0 40px rgba(0, 255, 200, 1); }
+  }
+
+  /* Optional background glow effect */
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
   

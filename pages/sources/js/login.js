@@ -13,11 +13,30 @@ let ints=0;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('/pages/service-worker.js')
       .then(reg => console.log('Service Worker registered', reg))
       .catch(err => console.log('Service Worker failed', err));
   });
 }
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); // Prevent default mini-infobar
+  deferredPrompt = e;
+
+  const installBtn = document.getElementById('installBtn');
+  installBtn.style.display = 'block';
+
+  installBtn.addEventListener('click', () => {
+    deferredPrompt.prompt(); // Show browser install prompt
+    deferredPrompt.userChoice.then((choice) => {
+      console.log(choice.outcome);
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  });
+});
 
 
 async function fetchAndRenderFriends() {

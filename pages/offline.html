@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Offline 😢</title>
+  <style>
+    /* Body styling */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: radial-gradient(circle at top, #1a1a1a, #000000);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Glowing bouncing header */
+    h1 {
+      font-size: 3rem;
+      color: #ff4d6d;
+      text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d, 0 0 30px #ff4d6d;
+      animation: bounceGlow 2s infinite;
+      margin-bottom: 20px;
+    }
+
+    /* Subtext with glow fade animation */
+    p {
+      font-size: 1.5rem;
+      color: #00e0ff;
+      text-shadow: 0 0 5px #00e0ff, 0 0 15px #00e0ff;
+      animation: glowFade 3s infinite alternate;
+    }
+
+    /* Bouncing + glow animation keyframes */
+    @keyframes bounceGlow {
+      0%, 100% { transform: translateY(0); text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d, 0 0 30px #ff4d6d; }
+      50% { transform: translateY(-20px); text-shadow: 0 0 20px #ff99aa, 0 0 40px #ff99aa, 0 0 60px #ff99aa; }
+    }
+
+    @keyframes glowFade {
+      0% { text-shadow: 0 0 5px #00e0ff, 0 0 15px #00e0ff; }
+      100% { text-shadow: 0 0 20px #00ffff, 0 0 50px #00ffff; }
+    }
+
+    /* Floating glowing particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: float 6s infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+      50% { transform: translateY(-200px) translateX(100px); opacity: 0.3; }
+      100% { transform: translateY(0) translateX(-50px); opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <h1>You are offline 😢</h1>
+  <p>Check your internet connection and try again.</p>
+
+  <!-- Glowing particles -->
+  <div class="particle" style="width:10px;height:10px;background:#ff4d6d;top:20%;left:30%;animation-delay:0s;"></div>
+  <div class="particle" style="width:15px;height:15px;background:#00e0ff;top:70%;left:60%;animation-delay:2s;"></div>
+  <div class="particle" style="width:8px;height:8px;background:#ff4d6d;top:50%;left:80%;animation-delay:1s;"></div>
+  <div class="particle" style="width:12px;height:12px;background:#00e0ff;top:30%;left:10%;animation-delay:3s;"></div>
+
+</body>
+</html>
