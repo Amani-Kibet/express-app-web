@@ -8,6 +8,7 @@ const ASSETS = [
   '/pages/offline.html',
   '/pages/personalInfo.html',
   '/pages/profileCentre.html',
+  '/pages/service-worker.js',
   '/pages/signin.html',
   '/pages/sources/css/chat.css',
   '/pages/sources/css/contacts.css',

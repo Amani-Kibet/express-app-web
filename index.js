@@ -19,6 +19,9 @@ app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 app.use("/sounds", express.static("sounds"))
+app.get('/service-worker.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'service-worker.js'));
+});
 
 
 mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatabase?retryWrites=true&w=majority")

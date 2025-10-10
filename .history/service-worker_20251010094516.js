@@ -19,11 +19,19 @@ const ASSETS = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ASSETS))
-      .then(() => self.skipWaiting())
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        await cache.addAll(ASSETS);
+        console.log('[SW] All assets cached successfully.');
+      } catch (err) {
+        console.error('[SW] Cache failed:', err);
+      }
+    })()
   );
+  self.skipWaiting();
 });
+
 
 self.addEventListener('activate', event => {
   event.waitUntil(
