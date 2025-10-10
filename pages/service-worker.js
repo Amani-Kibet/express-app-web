@@ -1,8 +1,21 @@
 const CACHE_NAME = 'express-pwa-cache-v1';
 const ASSETS = [
   '/',
+  '/pages/account.html',
   '/pages/chat.html',
-  '/pages/offline.html',    // optional
+  '/pages/help.html',
+  '/pages/manifest.json',
+  '/pages/offline.html',
+  '/pages/personalInfo.html',
+  '/pages/profileCentre.html',
+  '/pages/service-worker.js',
+  '/pages/signin.html',
+  '/pages/sources/css/chat.css',
+  '/pages/sources/css/contacts.css',
+  '/pages/sources/css/login.css',
+  '/pages/sources/js/chat.js',
+  '/pages/sources/js/contacts.js',
+  '/pages/sources/js/login.js',
 ];
 
 self.addEventListener('install', event => {

@@ -6,8 +6,7 @@
   <title>Chat</title>
   
   <link rel="manifest" href="/pages/manifest.json">
-<meta name="theme-color" content="#365d99ff">
-
+  <link rel="icon" href="/pictures/icon1.ico">
 
   <link rel="stylesheet" href="/pages/sources/css/login.css">
   <link rel="stylesheet" href="/pages/sources/css/chat.css">
@@ -369,45 +368,6 @@
 <script src="/pages/sources/js/contacts.js"></script>
 <script src="/pages/sources/js/chat.js"></script>
   <script>
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/pages/service-worker.js')
-        .then(reg => {
-          console.log('SW registered', reg);
-        }).catch(err => {
-          console.error('SW register failed', err);
-        });
-    } else {
-      document.getElementById('pwastate').textContent = 'no service worker support';
-    }
-
-    // beforeinstallprompt handling
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-installBtn.style.display = 'inline-block'; // always visible
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.disabled = false; // enable button when prompt is ready
-});
-
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return alert('PWA not installable on this browser');
-  deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  console.log(choice);
-  installBtn.style.display = 'none';
-  deferredPrompt = null;
-});
-
-
-    // Optional: track appinstalled event
-    window.addEventListener('appinstalled', () => {
-      console.log('PWA installed!');
-      document.getElementById('pwastate').textContent = 'installed';
-    });
-
     function setupModal(triggerId, modalId) {
   const trigger = document.getElementById(triggerId);
   const modal = document.getElementById(modalId);
@@ -417,6 +377,45 @@ installBtn.addEventListener('click', async () => {
   closeBtn.onclick = () => { modal.style.display = "none"; };
   window.addEventListener("click", e => { if(e.target === modal) modal.style.display = "none"; });
 }
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/pages/service-worker.js')
+    .then(reg => {
+      console.log('SW registered', reg);
+    }).catch(err => {
+      console.error('SW register failed', err);
+    });
+} else {
+  document.getElementById('pwastate').textContent = 'no service worker support';
+}
+
+// beforeinstallprompt handling
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+installBtn.style.display = 'inline-block'; // always visible
+
+window.addEventListener('beforeinstallprompt', (e) => {
+e.preventDefault();
+deferredPrompt = e;
+installBtn.disabled = false; // enable button when prompt is ready
+});
+
+installBtn.addEventListener('click', async () => {
+if (!deferredPrompt) return alert('PWA not installable on this browser');
+deferredPrompt.prompt();
+const choice = await deferredPrompt.userChoice;
+console.log(choice);
+installBtn.style.display = 'none';
+deferredPrompt = null;
+});
+
+
+// Optional: track appinstalled event
+window.addEventListener('appinstalled', () => {
+  console.log('PWA installed!');
+  document.getElementById('pwastate').textContent = 'installed';
+});
+
 
   </script>
 </body>
