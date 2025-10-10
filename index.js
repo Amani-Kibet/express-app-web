@@ -411,10 +411,11 @@ app.post("/update-profile", filex.fields([
       <html lang="en">
       <head>
       <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
       <title>Startup</title>
       <style>
       body {
+        min-height: 100dvh;
       margin: 0;
       height: 100vh;
       display: flex;

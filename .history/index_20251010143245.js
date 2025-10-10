@@ -19,6 +19,9 @@ app.use(express.json())
 app.use("/pictures", express.static("pictures"))
 app.use("/pages", express.static("pages"))
 app.use("/sounds", express.static("sounds"))
+app.get('/service-worker.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'service-worker.js'));
+});
 
 
 mongoose.connect("mongodb+srv://Amani:unity@cluster0.ou1cn67.mongodb.net/myDatabase?retryWrites=true&w=majority")
@@ -408,10 +411,11 @@ app.post("/update-profile", filex.fields([
       <html lang="en">
       <head>
       <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
       <title>Startup</title>
       <style>
       body {
+        min-height: 100dvh;
       margin: 0;
       height: 100vh;
       display: flex;

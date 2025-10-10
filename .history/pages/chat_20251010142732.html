@@ -19,12 +19,14 @@
       box-sizing: border-box;
     }
     html, body {
+      margin: 0;
+      padding: 0;
       height: 100%;
       width: 100%;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      display: flex;
-      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     body {
       margin: 0;
@@ -401,7 +403,7 @@ installBtn.disabled = false; // enable button when prompt is ready
 });
 
 installBtn.addEventListener('click', async () => {
-if (!deferredPrompt) return alert('PWA not installable on this browser');
+if (!deferredPrompt) return alert('Unity not installable, change the browser or contact us to give you a compatible version');
 deferredPrompt.prompt();
 const choice = await deferredPrompt.userChoice;
 console.log(choice);
